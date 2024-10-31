@@ -6,6 +6,7 @@ import js from "@eslint/js";
 import eslint from "@eslint/js";
 import globals from "globals";
 import tseslint, { parser as tsParser } from "typescript-eslint";
+import jest from "eslint-plugin-jest";
 
 export default tseslint.config(
     eslint.configs.recommended,
@@ -30,6 +31,7 @@ export default tseslint.config(
         plugins: {
             "@typescript-eslint": tseslint,
             "node": {},
+            "jest": jest,
         },
         rules: {
             "@typescript-eslint/consistent-type-definitions": [
@@ -41,5 +43,18 @@ export default tseslint.config(
             "no-unreachable": "warn",
             "no-constant-condition": [ "warn", { "checkLoops": false } ],
         },
+        overrides: [
+            {
+                files: [ "**/*.test.ts", "**/*.spec.ts" ],
+                plugins: ["jest"],
+                env: { "jest/globals": true },
+                extends: [ "plugin:jest/recommended" ],
+                rules: {
+                    "jest/no-disabled-tests": "warn",
+                    "jest/no-focused-tests": "error",
+                    "jest/no-identical-title": "error",
+                },
+            },
+        ],
     },
 );
