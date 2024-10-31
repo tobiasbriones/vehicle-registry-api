@@ -2,6 +2,16 @@
 
 Backend API for a vehicle registration web app that allows entrance and leave.
 
+## Getting Started
+
+This is Node + Express.js + TypeScript application.
+
+Run `npm install` to install dependencies on your machine.
+
+Run `npm start` to run the development server.
+
+Run `npm build` to create the production build at [./dist](dist).
+
 ## Environment Variables
 
 The app utilizes environment variables to set production values.
