@@ -7,8 +7,9 @@ import express from "express";
 
 dotenv.config();
 
+const DEF_PORT = 3000;
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || DEF_PORT;
 
 app.get("/", (req, res) => {
     res.send("Vehicle Registry Server");
