@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-const express = require("express");
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
+import express from "express";
 
 dotenv.config();
 

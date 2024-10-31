@@ -3,8 +3,10 @@
     "version": "0.1.0-dev",
     "description": "Backend API for a vehicle registration web app that allows entrance and leave.",
     "main": "index.js",
+    "type": "module",
+    "private": true,
     "scripts": {
-        "start": "node src/index.js",
+        "start": "npx tsx src/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -33,6 +35,7 @@
     "devDependencies": {
         "@types/express": "^5.0.0",
         "@types/node": "^22.8.6",
+        "tsx": "^4.19.2",
         "typescript": "^5.6.3"
     }
 }
