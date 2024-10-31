@@ -1,32 +1,32 @@
 {
-  "name": "vehicle-registry-api",
-  "version": "0.1.0-dev",
-  "description": "Backend API for a vehicle registration web app that allows entrance and leave.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tobiasbriones/vehicle-registry-api.git"
-  },
-  "keywords": [
-    "nodejs",
-    "expressjs",
-    "api",
-    "typescript",
-    "web-development",
-    "vehicle-registry",
-    "backend"
-  ],
-  "author": "Tobias Briones",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tobiasbriones/vehicle-registry-api/issues"
-  },
-  "homepage": "https://github.com/tobiasbriones/vehicle-registry-api#readme",
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1"
-  }
+    "name": "vehicle-registry-api",
+    "version": "0.1.0-dev",
+    "description": "Backend API for a vehicle registration web app that allows entrance and leave.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tobiasbriones/vehicle-registry-api.git"
+    },
+    "keywords": [
+        "nodejs",
+        "expressjs",
+        "api",
+        "typescript",
+        "web-development",
+        "vehicle-registry",
+        "backend"
+    ],
+    "author": "Tobias Briones",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/tobiasbriones/vehicle-registry-api/issues"
+    },
+    "homepage": "https://github.com/tobiasbriones/vehicle-registry-api#readme",
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1"
+    }
 }
