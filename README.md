@@ -17,9 +17,10 @@ your deployment environment (e.g. Render, AWS, etc.) instead of using a
 
 ### Production Variables
 
-| Environment Variable | Description                                                    | Default Value |
-|----------------------|----------------------------------------------------------------|---------------|
-| `PORT`               | Port on which the application listens for incoming connections | `3000`        |
+| Environment Variable | Description                                                                             | Default Value |
+|----------------------|-----------------------------------------------------------------------------------------|---------------|
+| `PORT`               | Port on which the application listens for incoming connections                          | `3000`        |
+| `ENV_MODE`           | Mode of the environment the application runs on (development, staging, production, etc) | `production`  |
 
 ## About
 
