@@ -4,6 +4,8 @@
 
 [![GitHub Project License](https://img.shields.io/github/license/tobiasbriones/vehicle-registry-api.svg?style=flat-square)](https://github.com/tobiasbriones/vehicle-registry-api/blob/main/LICENSE)
 
+[![codecov](https://codecov.io/github/tobiasbriones/vehicle-registry-api/branch/ops/graph/badge.svg?token=LA2I0K5SLI)](https://codecov.io/github/tobiasbriones/vehicle-registry-api)
+
 Backend API for a vehicle registration web app that allows entrance and leave.
 
 ## Getting Started
