@@ -26,6 +26,9 @@ Run tests with `npm run test`, and watch via `npm run test:watch`.
 
 Open up the coverage report with `npm run view:coverage`.
 
+The command `npm run test:coverage` is the same as `test`, but it may be useful
+to clarify the "coverage" option explicitly when used in automated CI.
+
 ## Environment Variables
 
 The app utilizes environment variables to set production values.
