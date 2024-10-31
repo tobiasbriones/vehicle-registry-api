@@ -18,6 +18,14 @@ Run ESLint with `npm run lint` to check code quality with static analysis.
 
 Run `npm build` to create the production build at [./dist](dist).
 
+Run `npm run clean` to delete generated project files.
+
+### Testing
+
+Run tests with `npm run test`, and watch via `npm run test:watch`.
+
+Open up the coverage report with `npm run view:coverage`.
+
 ## Environment Variables
 
 The app utilizes environment variables to set production values.
