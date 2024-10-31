@@ -14,6 +14,8 @@ Run `npm install` to install dependencies on your machine.
 
 Run `npm start` to run the development server.
 
+Run ESLint with `npm run lint` to check code quality with static analysis.
+
 Run `npm build` to create the production build at [./dist](dist).
 
 ## Environment Variables
