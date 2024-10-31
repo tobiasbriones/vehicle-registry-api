@@ -16,3 +16,12 @@ CREATE DATABASE local_vehicle_registry
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
+
+-- Vehicle
+CREATE TABLE vehicle
+(
+    id         SERIAL PRIMARY KEY,
+    brand      VARCHAR(100) NOT NULL,
+    model      VARCHAR(100) NOT NULL,
+    number     VARCHAR(20)  NOT NULL
+);
