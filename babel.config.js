@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-module.exports = {
+export default {
     presets: [
         [ "@babel/preset-env", { targets: { node: "current" } } ],
         "@babel/preset-typescript",
