@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { objToString } from "@/utils";
+import { internalError } from "@log/log";
 import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
 
@@ -20,14 +22,9 @@ export class VehicleService {
         `;
 
         const handleError = (reason: unknown) => {
-            const msg = `Fail to create vehicle ${ JSON.stringify(
-                vehicle,
-                null,
-                4,
-            ) }.`;
+            const msg = `Fail to create vehicle ${ objToString(vehicle) }.`;
 
-            console.error(msg, "Reason:", String(reason));
-            return Promise.reject(msg);
+            return internalError(msg, String(reason));
         };
 
         const queryResult = await this
@@ -43,12 +40,10 @@ export class VehicleService {
         else {
             const msg = "Internal error. Fail to add record.";
 
-            console.error(
+            result = internalError(
                 msg,
-                "Reason:",
                 `Row count ${ queryResult.rowCount } is not 1`,
             );
-            result = Promise.reject(msg);
         }
 
         return result;
