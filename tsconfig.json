@@ -111,8 +111,17 @@
 
         /* Completeness */
         // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-        "skipLibCheck": true
+        "skipLibCheck": true,
         /* Skip type checking all .d.ts files. */
+
+        /* Aliases */
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [ "src/*" ],
+            "@log/*": [ "src/log" ],
+            "@db/*": [ "src/db" ],
+            "@app/*": [ "src/app" ],
+        }
     },
     "include": [ "src/**/*.ts" ],
     "exclude": [ "node_modules", "dist" ]
