@@ -118,9 +118,9 @@
         "baseUrl": ".",
         "paths": {
             "@/*": [ "src/*" ],
-            "@log/*": [ "src/log" ],
-            "@db/*": [ "src/db" ],
-            "@app/*": [ "src/app" ],
+            "@log/*": [ "src/log/*" ],
+            "@db/*": [ "src/db/*" ],
+            "@app/*": [ "src/app/*" ],
         }
     },
     "include": [ "src/**/*.ts" ],
