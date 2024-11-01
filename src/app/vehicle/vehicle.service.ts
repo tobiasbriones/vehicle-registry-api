@@ -89,4 +89,23 @@ export class VehicleService {
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
     }
+
+    async delete(id: number): Promise<boolean> {
+        const query = `
+            DELETE
+            FROM vehicle
+            WHERE id = $1;
+        `;
+
+        const handleError = (reason: unknown) => {
+            const msg = `Fail to delete vehicle with id ${ id }.`;
+            return internalError(msg, reason);
+        };
+
+        return await this
+            .pool
+            .query(query, [ id ])
+            .then(res => res.rowCount === 1)
+            .catch(handleError);
+    }
 }

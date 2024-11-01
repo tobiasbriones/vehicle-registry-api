@@ -267,3 +267,74 @@ describe("VehicleService update method", () => {
             );
     });
 });
+
+describe("VehicleService delete method", () => {
+    let mockPool: jest.Mocked<Pool>;
+    let service: VehicleService;
+
+    beforeEach(() => {
+        mockPool = new Pool() as jest.Mocked<Pool>;
+        service = new VehicleService(mockPool);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it(
+        "should return true when the vehicle is successfully deleted",
+        async () => {
+            const mockId = 1;
+
+            mockPool.query = jest.fn().mockResolvedValueOnce({
+                rowCount: 1, // Simulating a successful deletion
+            });
+
+            const result = await service.delete(mockId);
+
+            expect(result).toBe(true);
+
+            expect(mockPool.query)
+                .toHaveBeenCalledWith(
+                    expect.stringContaining("DELETE"),
+                    [ mockId ],
+                );
+        },
+    );
+
+    it("should return false when no vehicle is deleted", async () => {
+        const mockId = 1;
+
+        mockPool.query = jest.fn().mockResolvedValueOnce({
+            rowCount: 0, // Simulating that no rows were deleted
+        });
+
+        const result = await service.delete(mockId);
+
+        expect(result).toBe(false);
+
+        expect(mockPool.query)
+            .toHaveBeenCalledWith(
+                expect.stringContaining("DELETE"),
+                [ mockId ],
+            );
+    });
+
+    it("should handle errors correctly", async () => {
+        const mockId = 1;
+        const mockError = new Error("Query failed");
+
+        mockPool.query = jest.fn().mockRejectedValueOnce(mockError);
+
+        await expect(service.delete(mockId))
+            .rejects
+            .toMatch(`Fail to delete vehicle with id ${ mockId }.`);
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
+                expect.stringContaining(`Fail to delete vehicle with id ${ mockId }.`),
+                "Reason:",
+                String(mockError),
+            );
+    });
+});
