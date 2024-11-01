@@ -36,7 +36,8 @@
     "homepage": "https://github.com/tobiasbriones/vehicle-registry-api#readme",
     "dependencies": {
         "dotenv": "^16.4.5",
-        "express": "^4.21.1"
+        "express": "^4.21.1",
+        "pg": "^8.13.1"
     },
     "devDependencies": {
         "@babel/core": "^7.26.0",
@@ -62,6 +63,7 @@
         "ts-node": "^10.9.2",
         "tsx": "^4.19.2",
         "typescript": "^5.6.3",
-        "typescript-eslint": "^8.6.0"
+        "typescript-eslint": "^8.6.0",
+        "@types/pg": "^8.11.10"
     }
 }
