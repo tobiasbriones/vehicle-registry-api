@@ -179,3 +179,91 @@ describe("VehicleService read method", () => {
             );
     });
 });
+
+describe("VehicleService update method", () => {
+    let mockPool: jest.Mocked<Pool>;
+    let service: VehicleService;
+
+    beforeEach(() => {
+        mockPool = new Pool() as jest.Mocked<Pool>;
+        service = new VehicleService(mockPool);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it(
+        "should return the updated vehicle when update is successful",
+        async () => {
+            const vehicle = {
+                brand: "Toyota",
+                model: "Corolla",
+                number: "ABC123",
+            };
+            const mockId = 1;
+
+            mockPool.query = jest.fn().mockResolvedValueOnce({
+                rowCount: 1,
+                rows: [ vehicle ],
+            });
+
+            const result = await service.update(mockId, vehicle);
+
+            expect(result).toEqual(vehicle);
+
+            expect(mockPool.query)
+                .toHaveBeenCalledWith(
+                    expect.stringContaining("UPDATE vehicle"),
+                    [ vehicle.brand, vehicle.model, vehicle.number, mockId ],
+                );
+        },
+    );
+
+    it("should return null when no vehicle is updated", async () => {
+        const mockId = 1;
+        const vehicle = {
+            brand: "Toyota",
+            model: "Corolla",
+            number: "ABC123",
+        };
+
+        mockPool.query = jest.fn().mockResolvedValueOnce({
+            rowCount: 0,
+            rows: [],
+        });
+
+        const result = await service.update(mockId, vehicle);
+
+        expect(result).toBeNull();
+
+        expect(mockPool.query)
+            .toHaveBeenCalledWith(
+                expect.stringContaining("UPDATE vehicle"),
+                [ vehicle.brand, vehicle.model, vehicle.number, mockId ],
+            );
+    });
+
+    it("should handle errors correctly", async () => {
+        const mockId = 1;
+        const vehicle = {
+            brand: "Toyota",
+            model: "Corolla",
+            number: "ABC123",
+        };
+        const mockError = new Error("Query failed");
+
+        mockPool.query = jest.fn().mockRejectedValueOnce(mockError);
+
+        await expect(service.update(mockId, vehicle))
+            .rejects
+            .toMatch(`Fail to update vehicle`);
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
+                expect.stringContaining(`Fail to update vehicle`),
+                "Reason:",
+                String(mockError),
+            );
+    });
+});

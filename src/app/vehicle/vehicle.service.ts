@@ -66,4 +66,27 @@ export class VehicleService {
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
     }
+
+    async update(id: number, vehicle: Vehicle): Promise<Vehicle | null> {
+        const { brand, model, number } = vehicle;
+        const query = `
+            UPDATE vehicle
+            SET brand  = $1,
+                model  = $2,
+                number = $3
+            WHERE id = $4
+            RETURNING *;
+        `;
+
+        const handleError = (reason: unknown) => {
+            const msg = `Fail to update vehicle ${ objToString(vehicle) } with id ${ id }.`;
+            return internalError(msg, reason);
+        };
+
+        return this
+            .pool
+            .query(query, [ brand, model, number, id ])
+            .then(res => res.rowCount === 1 ? res.rows[0] : null)
+            .catch(handleError);
+    }
 }
