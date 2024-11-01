@@ -16,12 +16,15 @@ describe("internalError", () => {
         jest.restoreAllMocks();
     });
 
-    it("should log the error message and reason to console", async () => {
+    it("should log the correct error message and reason", async () => {
         await expect(internalError(userMessage, mockReason))
             .rejects
-            .toBeUndefined();
+            .toEqual(userMessage);
 
-        expect(console.error)
-            .toHaveBeenCalledWith(userMessage, "Reason:", mockReason);
+        expect(console.error).toHaveBeenCalledWith(
+            userMessage,
+            "Reason:",
+            mockReason.toString()
+        );
     });
 });

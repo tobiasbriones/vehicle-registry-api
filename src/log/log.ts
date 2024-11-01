@@ -11,6 +11,6 @@
  * @returns {Promise<never>} Rejected Promise with the original `msg`
  */
 export function internalError(msg: string, reason: unknown): Promise<never> {
-    console.error(msg, "Reason:", reason);
-    return Promise.reject();
+    console.error(msg, "Reason:", String(reason));
+    return Promise.reject(msg);
 }
