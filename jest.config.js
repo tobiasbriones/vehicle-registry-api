@@ -8,4 +8,10 @@ export default {
     transform: {
         "^.+.tsx?$": [ "ts-jest", {} ],
     },
+    moduleNameMapper: {
+        "^@/(.*)$": "<rootDir>/src/$1",
+        "^@log/(.*)$": "<rootDir>/src/log/$1",
+        "^@db/(.*)$": "<rootDir>/src/db/$1",
+        "^@app/(.*)$": "<rootDir>/src/app/$1",
+    },
 };
