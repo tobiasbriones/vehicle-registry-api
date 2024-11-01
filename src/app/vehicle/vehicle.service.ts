@@ -23,8 +23,7 @@ export class VehicleService {
 
         const handleError = (reason: unknown) => {
             const msg = `Fail to create vehicle ${ objToString(vehicle) }.`;
-
-            return internalError(msg, String(reason));
+            return internalError(msg, reason);
         };
 
         const queryResult = await this
