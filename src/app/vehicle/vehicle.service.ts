@@ -47,4 +47,23 @@ export class VehicleService {
 
         return result;
     }
+
+    async read(id: number): Promise<Vehicle | null> {
+        const query = `
+            SELECT *
+            FROM vehicle
+            WHERE id = $1;
+        `;
+
+        const handleError = (reason: unknown) => {
+            const msg = `Fail to read vehicle with id ${ id }.`;
+            return internalError(msg, reason);
+        };
+
+        return this
+            .pool
+            .query(query, [ id ])
+            .then(res => res.rowCount === 1 ? res.rows[0] : null)
+            .catch(handleError);
+    }
 }
