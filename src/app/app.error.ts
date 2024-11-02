@@ -24,20 +24,26 @@ export type AppError = {
     msg: string,
 }
 
-export const error = (type: ErrorType, msg: string): AppError => ({ type, msg });
+export const error = (type: ErrorType, msg: string): AppError => ({
+    type,
+    msg,
+});
 
 export const internalError = (msg: string): AppError => ({
     type: "InternalError",
     msg,
 });
 
+export const rejectInternalError = (msg: string): Promise<never> =>
+    Promise.reject(internalError(msg));
+
 export const duplicateError = (msg: string): AppError => ({
     type: "DuplicateError",
     msg,
 });
 
-export const rejectInternalError = (msg: string): Promise<never> =>
-    Promise.reject(internalError(msg));
+export const rejectDuplicateError = (msg: string): Promise<never> =>
+    Promise.reject(duplicateError(msg));
 
 export type HttpError = {
     statusCode: number,
