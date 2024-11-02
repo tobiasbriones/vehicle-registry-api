@@ -103,7 +103,7 @@ export class VehicleService {
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
-        return await this
+        return this
             .pool
             .query(query, [ id ])
             .then(res => res.rowCount === 1)
