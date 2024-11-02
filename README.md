@@ -25,6 +25,9 @@ As said above, you can run the production app with `node dist/index.js` or the
 
 ### Testing
 
+The application specifies unit tests to enhance its reliability and
+documentation.
+
 | Command                 | Description                                                             |
 |-------------------------|-------------------------------------------------------------------------|
 | `npm run test`          | Runs the test suite.                                                    |
