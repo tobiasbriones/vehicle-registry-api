@@ -3,7 +3,7 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { objToString } from "@/utils";
-import { rejectInternalError } from "@app/app.error";
+import { rejectDuplicateError, rejectInternalError } from "@app/app.error";
 import { withErrorMessage } from "@log/log";
 import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
@@ -22,10 +22,26 @@ export class VehicleService {
             VALUES ($1, $2, $3) RETURNING *;
         `;
 
+        const rejectReason = (reason: unknown) => (msg: string) => {
+            const reasonStr = String(reason);
+            let detailMsg = "";
+            let reject;
+
+            if (reasonStr.includes(`duplicate key value violates unique constraint "vehicle_number_key"`)) {
+                detailMsg = "A vehicle with this number already exists.";
+                reject = rejectDuplicateError;
+            }
+            else {
+                reject = rejectInternalError;
+            }
+
+            return reject(`${ msg }\n${detailMsg}`);
+        };
+
         const handleError = (reason: unknown) =>
             withErrorMessage(`Fail to create vehicle ${ objToString(vehicle) }.`)
                 .logInternalReason(reason)
-                .catch(rejectInternalError);
+                .catch(rejectReason(reason));
 
         const queryResult = await this
             .pool

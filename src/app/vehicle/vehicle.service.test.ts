@@ -63,7 +63,7 @@ describe("VehicleService create method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to create vehicle ${ objToString(vehicle) }.`,
+                msg: `Fail to create vehicle ${ objToString(vehicle) }.\n`,
             });
 
         expect(console.error)
