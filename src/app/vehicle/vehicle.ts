@@ -6,12 +6,12 @@
  * Represents a vehicle in the system.
  */
 export type Vehicle = {
+    /** Unique number associated with the vehicle. */
+    number: string,
+
     /** For example, Toyota, Ford. */
     brand: string,
 
     /** For example, Camry, Mustang. */
     model: string,
-
-    /** Unique number associated with the vehicle. */
-    number: string,
 }
