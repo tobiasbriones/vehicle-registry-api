@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { StatusCodes } from "http-status-codes";
+
 export type ErrorType
     = "InternalError"
 
 export const errorToStatusCode = (error: ErrorType) => {
-    const map: Record<ErrorType, number> = {
-        InternalError: 500,
+    const map: Record<ErrorType, StatusCodes> = {
+        InternalError: StatusCodes.INTERNAL_SERVER_ERROR,
     };
 
     return map[error];
