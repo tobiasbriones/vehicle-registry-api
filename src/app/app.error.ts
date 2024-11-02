@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { objToString } from "@/utils";
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export type ErrorType
@@ -39,3 +41,26 @@ export const errorToHttp = ({ type, msg }: AppError): HttpError => ({
     statusCode: errorToStatusCode(type),
     msg,
 });
+
+export const respondHttpError = (res: Response) => (error: unknown) => {
+    if (isAppError(error)) {
+        const { type, msg } = error;
+
+        res
+            .status(errorToStatusCode(type))
+            .json({ error: msg });
+    }
+    else {
+        res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: objToString(error) });
+    }
+};
+
+const isNonNullObject = (obj: unknown) =>
+    typeof obj === "object" && obj !== null;
+
+const isAppError = (error: unknown): error is AppError =>
+    isNonNullObject(error) &&
+    "type" in error &&
+    "msg" in error;

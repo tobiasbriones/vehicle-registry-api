@@ -3,12 +3,15 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { withErrorMessage } from "@log/log";
+import { Response } from "express";
+import { objToString } from "@/utils";
 import {
     error,
     errorToHttp,
     errorToStatusCode,
     internalError,
     rejectInternalError,
+    respondHttpError,
 } from "./app.error";
 
 describe("Error Handling Module", () => {
@@ -99,5 +102,39 @@ describe("internalError", () => {
             "Reason:",
             mockReason.toString(),
         );
+    });
+});
+
+describe("respondHttpError", () => {
+    let res: Response;
+
+    beforeEach(() => {
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        } as unknown as Response;
+    });
+
+    it("should respond with the correct status code and error message", () => {
+        const error = internalError("Some internal error occurred");
+
+        respondHttpError(res)(error);
+
+        expect(res.status)
+            .toHaveBeenCalledWith(500);
+
+        expect(res.json)
+            .toHaveBeenCalledWith({ error: error.msg });
+    });
+
+    it("should handle unknown errors gracefully", () => {
+        // Non-standard error
+        const unknownError = { reason: "An unknown error occurred" };
+
+        respondHttpError(res)(unknownError);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json)
+            .toHaveBeenCalledWith({ error: objToString(unknownError) });
     });
 });
