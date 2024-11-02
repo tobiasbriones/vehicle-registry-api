@@ -15,14 +15,14 @@ export const errorToStatusCode = (error: ErrorType) => {
     return map[error];
 };
 
-export type Error = {
+export type AppError = {
     type: ErrorType,
     msg: string,
 }
 
-export const error = (type: ErrorType, msg: string): Error => ({ type, msg });
+export const error = (type: ErrorType, msg: string): AppError => ({ type, msg });
 
-export const internalError = (msg: string): Error => ({
+export const internalError = (msg: string): AppError => ({
     type: "InternalError",
     msg,
 });
@@ -35,7 +35,7 @@ export type HttpError = {
     msg: string,
 }
 
-export const errorToHttp = ({ type, msg }: Error): HttpError => ({
+export const errorToHttp = ({ type, msg }: AppError): HttpError => ({
     statusCode: errorToStatusCode(type),
     msg,
 });
