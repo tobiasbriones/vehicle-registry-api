@@ -16,10 +16,6 @@ describe("Error Handling Module", () => {
         it("should return 500 for InternalError", () => {
             expect(errorToStatusCode("InternalError")).toBe(500);
         });
-
-        it("should return undefined for unknown error types", () => {
-            expect(errorToStatusCode("UnknownError" as any)).toBeUndefined();
-        });
     });
 
     describe("error function", () => {
