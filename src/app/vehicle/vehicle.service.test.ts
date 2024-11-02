@@ -114,7 +114,7 @@ describe("VehicleService read method", () => {
 
     beforeEach(() => {
         mockPool = new Pool() as jest.Mocked<Pool>;
-        service = new VehicleService(mockPool);
+        service = newVehicleService(mockPool);
     });
 
     afterEach(() => {
@@ -192,7 +192,7 @@ describe("VehicleService update method", () => {
 
     beforeEach(() => {
         mockPool = new Pool() as jest.Mocked<Pool>;
-        service = new VehicleService(mockPool);
+        service = newVehicleService(mockPool);
     });
 
     afterEach(() => {
@@ -283,7 +283,7 @@ describe("VehicleService delete method", () => {
 
     beforeEach(() => {
         mockPool = new Pool() as jest.Mocked<Pool>;
-        service = new VehicleService(mockPool);
+        service = newVehicleService(mockPool);
     });
 
     afterEach(() => {

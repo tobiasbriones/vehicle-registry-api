@@ -8,18 +8,20 @@ import { withErrorMessage } from "@log/log";
 import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
 
-export class VehicleService {
-    private readonly pool: Pool;
+export type VehicleService = {
+    create: (vehicle: Vehicle) => Promise<Vehicle>,
+    read: (id: number) => Promise<Vehicle | null>,
+    update: (id: number, vehicle: Vehicle) => Promise<Vehicle | null>,
+    delete: (id: number) => Promise<boolean>,
+}
 
-    constructor(pool: Pool) {
-        this.pool = pool;
-    }
-
-    async create(vehicle: Vehicle): Promise<Vehicle> {
+export const newVehicleService = (pool: Pool): VehicleService => ({
+    async create(vehicle) {
         const { brand, model, number } = vehicle;
         const query = `
             INSERT INTO vehicle (brand, model, number)
-            VALUES ($1, $2, $3) RETURNING *;
+            VALUES ($1, $2, $3)
+            RETURNING *;
         `;
 
         const rejectReason = (reason: unknown) => (msg: string) => {
@@ -35,7 +37,7 @@ export class VehicleService {
                 reject = rejectInternalError;
             }
 
-            return reject(`${ msg }\n${detailMsg}`);
+            return reject(`${ msg }\n${ detailMsg }`);
         };
 
         const handleError = (reason: unknown) =>
@@ -43,8 +45,7 @@ export class VehicleService {
                 .logInternalReason(reason)
                 .catch(rejectReason(reason));
 
-        const queryResult = await this
-            .pool
+        const queryResult = await pool
             .query(query, [ brand, model, number ])
             .catch(handleError);
 
@@ -61,9 +62,9 @@ export class VehicleService {
         }
 
         return result;
-    }
+    },
 
-    async read(id: number): Promise<Vehicle | null> {
+    async read(id) {
         const query = `
             SELECT *
             FROM vehicle
@@ -75,14 +76,13 @@ export class VehicleService {
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
-        return this
-            .pool
+        return pool
             .query(query, [ id ])
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
-    }
+    },
 
-    async update(id: number, vehicle: Vehicle): Promise<Vehicle | null> {
+    async update(id, vehicle) {
         const { brand, model, number } = vehicle;
         const query = `
             UPDATE vehicle
@@ -100,14 +100,13 @@ export class VehicleService {
              .catch(rejectInternalError);
         };
 
-        return this
-            .pool
+        return pool
             .query(query, [ brand, model, number, id ])
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
-    }
+    },
 
-    async delete(id: number): Promise<boolean> {
+    async delete(id) {
         const query = `
             DELETE
             FROM vehicle
@@ -119,12 +118,9 @@ export class VehicleService {
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
-        return this
-            .pool
+        return pool
             .query(query, [ id ])
             .then(res => res.rowCount === 1)
             .catch(handleError);
-    }
-}
-
-export const newVehicleService = (pool: Pool) => new VehicleService(pool);
+    },
+});
