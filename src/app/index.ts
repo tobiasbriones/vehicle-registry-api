@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import appRouter from "@app/app.router";
 import dotenv from "dotenv";
 import express from "express";
 
@@ -11,13 +12,11 @@ const DEF_PORT = 3000;
 const app = express();
 const port = process.env.PORT || DEF_PORT;
 
+app.use(appRouter);
+
 const server = app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${ port }`);
     console.log(`[server]: environment: ${process.env.ENV_MODE}`);
-});
-
-app.get("/", (req, res) => {
-    res.send("Vehicle Registry Server");
 });
 
 export { app, server };
