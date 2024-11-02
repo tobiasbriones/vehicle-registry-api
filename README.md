@@ -69,6 +69,11 @@ into your production environment.
 The [./http](http) project contains `http` files with requests you can run from
 your IDE to test the application API.
 
+## Database
+
+The [./database](database) project defines the PSQL source code and
+documentation for the database of the Vehicle Registry application.
+
 ## About
 
 **Vehicle Registry API**

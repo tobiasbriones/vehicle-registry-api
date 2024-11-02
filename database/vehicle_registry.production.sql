@@ -2,11 +2,11 @@
 --  SPDX-License-Identifier: MIT
 --  This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
--- Database: local_vehicle_registry
+-- Database: vehicle_registry
 
--- DROP DATABASE IF EXISTS local_vehicle_registry;
+-- DROP DATABASE IF EXISTS vehicle_registry;
 
-CREATE DATABASE local_vehicle_registry
+CREATE DATABASE vehicle_registry
     WITH
     OWNER = tobi
     ENCODING = 'UTF8'
@@ -16,12 +16,3 @@ CREATE DATABASE local_vehicle_registry
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
-
--- Vehicle
-CREATE TABLE vehicle
-(
-    id         SERIAL PRIMARY KEY,
-    number     VARCHAR(20)  NOT NULL UNIQUE,
-    brand      VARCHAR(100) NOT NULL,
-    model      VARCHAR(100) NOT NULL
-);
