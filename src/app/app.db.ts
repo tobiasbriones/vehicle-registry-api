@@ -4,4 +4,8 @@
 
 import { newDbPoolFromEnv } from "@db/db";
 
-export const dbPool = newDbPoolFromEnv();
+export function newAppDatabase() {
+    return {
+        dbPool: newDbPoolFromEnv(),
+    };
+}

@@ -4,10 +4,12 @@
 
 import express from "express";
 
-const appRouter = express.Router();
+export function newAppRouter() {
+    const router = express.Router();
 
-appRouter.get("/", (_, res) => {
-    res.send("Vehicle Registry Server");
-});
+    router.get("/", (_, res) => {
+        res.send("Vehicle Registry Server");
+    });
 
-export default appRouter;
+    return router;
+}
