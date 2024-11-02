@@ -6,7 +6,6 @@ import pg from "pg";
 
 const { Pool } = pg;
 
-
 export type DbConfig = {
     user: string;
     host: string;
