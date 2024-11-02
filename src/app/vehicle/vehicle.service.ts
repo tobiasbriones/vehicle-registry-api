@@ -110,3 +110,5 @@ export class VehicleService {
             .catch(handleError);
     }
 }
+
+export const newVehicleService = (pool: Pool) => new VehicleService(pool);

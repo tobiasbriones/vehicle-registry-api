@@ -5,7 +5,7 @@
 import { objToString } from "@/utils";
 import { Pool, QueryResult } from "pg";
 import { Vehicle } from "./vehicle";
-import { VehicleService } from "./vehicle.service";
+import { newVehicleService, VehicleService } from "./vehicle.service";
 
 jest.spyOn(console, "error").mockImplementation(() => {});
 
@@ -15,7 +15,7 @@ describe("VehicleService create method", () => {
 
     beforeEach(() => {
         mockPool = new Pool() as jest.Mocked<Pool>;
-        service = new VehicleService(mockPool);
+        service = newVehicleService(mockPool);
     });
 
     afterEach(() => {
