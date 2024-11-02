@@ -3,7 +3,8 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { objToString } from "@/utils";
-import { internalError } from "@log/log";
+import { rejectInternalError } from "@app/app.error";
+import { withErrorMessage } from "@log/log";
 import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
 
@@ -21,10 +22,10 @@ export class VehicleService {
             VALUES ($1, $2, $3) RETURNING *;
         `;
 
-        const handleError = (reason: unknown) => {
-            const msg = `Fail to create vehicle ${ objToString(vehicle) }.`;
-            return internalError(msg, reason);
-        };
+        const handleError = (reason: unknown) =>
+            withErrorMessage(`Fail to create vehicle ${ objToString(vehicle) }.`)
+                .logInternalReason(reason)
+                .catch(rejectInternalError);
 
         const queryResult = await this
             .pool
@@ -37,12 +38,10 @@ export class VehicleService {
             result = queryResult.rows[0];
         }
         else {
-            const msg = "Internal error. Fail to add record.";
-
-            result = internalError(
-                msg,
-                `Row count ${ queryResult.rowCount } is not 1`,
-            );
+            result =
+                withErrorMessage("Internal error. Fail to add record.")
+                    .logInternalReason(`Row count ${ queryResult.rowCount } is not 1`)
+                    .catch(rejectInternalError);
         }
 
         return result;
@@ -55,10 +54,10 @@ export class VehicleService {
             WHERE id = $1;
         `;
 
-        const handleError = (reason: unknown) => {
-            const msg = `Fail to read vehicle with id ${ id }.`;
-            return internalError(msg, reason);
-        };
+        const handleError = (reason: unknown) =>
+            withErrorMessage(`Fail to read vehicle with id ${ id }.`)
+                .logInternalReason(reason)
+                .catch(rejectInternalError);
 
         return this
             .pool
@@ -78,9 +77,11 @@ export class VehicleService {
             RETURNING *;
         `;
 
-        const handleError = (reason: unknown) => {
-            const msg = `Fail to update vehicle ${ objToString(vehicle) } with id ${ id }.`;
-            return internalError(msg, reason);
+        const handleError = async (reason: unknown) => {
+            return withErrorMessage(
+                `Fail to update vehicle ${ objToString(vehicle) } with id ${ id }.`,
+            ).logInternalReason(reason)
+             .catch(rejectInternalError);
         };
 
         return this
@@ -97,10 +98,10 @@ export class VehicleService {
             WHERE id = $1;
         `;
 
-        const handleError = (reason: unknown) => {
-            const msg = `Fail to delete vehicle with id ${ id }.`;
-            return internalError(msg, reason);
-        };
+        const handleError = (reason: unknown) =>
+            withErrorMessage(`Fail to delete vehicle with id ${ id }.`)
+                .logInternalReason(reason)
+                .catch(rejectInternalError);
 
         return await this
             .pool

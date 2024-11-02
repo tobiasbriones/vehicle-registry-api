@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { objToString } from "@/utils";
 import { Pool, QueryResult } from "pg";
 import { Vehicle } from "./vehicle";
 import { VehicleService } from "./vehicle.service";
@@ -60,11 +61,10 @@ describe("VehicleService create method", () => {
 
         await expect(service.create(vehicle))
             .rejects
-            .toMatch(`Fail to create vehicle ${ JSON.stringify(
-                vehicle,
-                null,
-                4,
-            ) }.`);
+            .toMatchObject({
+                type: "InternalError",
+                msg: `Fail to create vehicle ${ objToString(vehicle) }.`,
+            });
 
         expect(console.error)
             .toHaveBeenCalledWith(
@@ -91,7 +91,10 @@ describe("VehicleService create method", () => {
 
             await expect(service.create(mockVehicle))
                 .rejects
-                .toMatch("Internal error. Fail to add record.");
+                .toMatchObject({
+                    type: "InternalError",
+                    msg: "Internal error. Fail to add record.",
+                });
 
             expect(console.error)
                 .toHaveBeenCalledWith(
@@ -169,7 +172,10 @@ describe("VehicleService read method", () => {
 
         await expect(service.read(mockId))
             .rejects
-            .toMatch(`Fail to read vehicle with id ${ mockId }.`);
+            .toMatchObject({
+                type: "InternalError",
+                msg: `Fail to read vehicle with id ${ mockId }.`,
+            });
 
         expect(console.error)
             .toHaveBeenCalledWith(
@@ -257,7 +263,10 @@ describe("VehicleService update method", () => {
 
         await expect(service.update(mockId, vehicle))
             .rejects
-            .toMatch(`Fail to update vehicle`);
+            .toMatchObject({
+                type: "InternalError",
+                msg: `Fail to update vehicle ${ objToString(vehicle) } with id ${ mockId }.`,
+            });
 
         expect(console.error)
             .toHaveBeenCalledWith(
@@ -328,7 +337,10 @@ describe("VehicleService delete method", () => {
 
         await expect(service.delete(mockId))
             .rejects
-            .toMatch(`Fail to delete vehicle with id ${ mockId }.`);
+            .toMatchObject({
+                type: "InternalError",
+                msg: `Fail to delete vehicle with id ${ mockId }.`,
+            });
 
         expect(console.error)
             .toHaveBeenCalledWith(
