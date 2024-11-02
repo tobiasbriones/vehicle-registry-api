@@ -6,6 +6,7 @@ import appRouter from "@app/app.router";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const DEF_PORT = 3000;
 const app = express();
 const port = process.env.PORT || DEF_PORT;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(appRouter);
 

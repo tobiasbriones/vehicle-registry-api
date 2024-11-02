@@ -36,6 +36,7 @@
     "homepage": "https://github.com/tobiasbriones/vehicle-registry-api#readme",
     "dependencies": {
         "body-parser": "^1.20.3",
+        "cors": "^2.8.5",
         "dotenv": "^16.4.5",
         "express": "^4.21.1",
         "http-status-codes": "^2.3.0",
@@ -48,6 +49,7 @@
         "@babel/preset-typescript": "^7.26.0",
         "@eslint/js": "^9.11.0",
         "@jest/globals": "^29.7.0",
+        "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.8.6",
