@@ -18,7 +18,9 @@ Run `npm start` to run the development server.
 
 Run ESLint with `npm run lint` to check code quality with static analysis.
 
-Run `npm run build` to create the production build at [./dist](dist).
+Run `npm run build` to create the production build at [./dist](dist). You can
+run the production app with `node dist/index.js` or the
+[PM2](https://www.npmjs.com/package/pm2) process manager.
 
 Run `npm run clean` to delete generated project files.
 
