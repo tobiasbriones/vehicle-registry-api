@@ -8,7 +8,7 @@ POST {{host}}/vehicles
 Content-Type: application/json
 
 {
-    "brand": "content",
-    "model": "content",
-    "number": "content"
+    "number": "VIN-example",
+    "brand": "Toyota",
+    "model": "Camry"
 }
