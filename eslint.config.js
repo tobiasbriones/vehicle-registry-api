@@ -11,7 +11,7 @@ import jest from "eslint-plugin-jest";
 export default tseslint.config(
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
-    { ignores: [ "dist" ] },
+    { ignores: [ "dist", "src/**/*.js" ] },
     {
         extends: [
             js.configs.recommended,

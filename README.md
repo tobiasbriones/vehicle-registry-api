@@ -10,26 +10,27 @@ Backend API for a vehicle registration web app that allows entrance and leave.
 
 ## Getting Started
 
-This is Node + Express.js + TypeScript application.
+This is a Node + Express.js + TypeScript application.
 
-Run `npm install` to install dependencies on your machine.
+| Command         | Description                                                                                             |
+|-----------------|---------------------------------------------------------------------------------------------------------|
+| `npm install`   | Installs project dependencies.                                                                          |
+| `npm start`     | Runs the development server.                                                                            |
+| `npm run lint`  | Executes ESLint to check code quality using static analysis.                                            |
+| `npm run build` | Builds the **production** version in the `dist` directory. Use `node dist/index.js` or `pm2` to run it. |
+| `npm run clean` | Removes generated project files.                                                                        |
 
-Run `npm start` to run the development server.
-
-Run ESLint with `npm run lint` to check code quality with static analysis.
-
-Run `npm build` to create the production build at [./dist](dist).
-
-Run `npm run clean` to delete generated project files.
+As said above, you can run the production app with `node dist/index.js` or the
+[PM2](https://www.npmjs.com/package/pm2) process manager.
 
 ### Testing
 
-Run tests with `npm run test`, and watch via `npm run test:watch`.
-
-Open up the coverage report with `npm run view:coverage`.
-
-The command `npm run test:coverage` is the same as `test`, but it may be useful
-to clarify the "coverage" option explicitly when used in automated CI.
+| Command                 | Description                                                             |
+|-------------------------|-------------------------------------------------------------------------|
+| `npm run test`          | Runs the test suite.                                                    |
+| `npm run test:watch`    | Runs tests in watch mode for continuous testing during development.     |
+| `npm run view:coverage` | Opens the coverage report generated from tests.                         |
+| `npm run test:coverage` | Runs tests with coverage reporting, useful for clarity in automated CI. |
 
 ## Environment Variables
 
