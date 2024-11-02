@@ -64,6 +64,11 @@ into your production environment.
 | `DB_PASSWORD` | Password for the PostgreSQL user.                                                        | `${ db_password }` | `${ dev_db_password }`   |
 | `DB_PORT`     | Port on which the PostgreSQL database server is running.                                 | `5432`             | `5432`                   |
 
+## Testing HTTP Request
+
+The [./http](http) project contains `http` files with requests you can run from
+your IDE to test the application API.
+
 ## About
 
 **Vehicle Registry API**
