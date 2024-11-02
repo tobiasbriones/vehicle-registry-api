@@ -21,7 +21,7 @@ CREATE DATABASE local_vehicle_registry
 CREATE TABLE vehicle
 (
     id         SERIAL PRIMARY KEY,
+    number     VARCHAR(20)  NOT NULL UNIQUE,
     brand      VARCHAR(100) NOT NULL,
-    model      VARCHAR(100) NOT NULL,
-    number     VARCHAR(20)  NOT NULL
+    model      VARCHAR(100) NOT NULL
 );
