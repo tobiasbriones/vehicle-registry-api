@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { objToString } from "@/utils";
 import { withErrorMessage } from "@log/log";
 import { Response } from "express";
-import { objToString } from "@/utils";
 import {
+    duplicateError,
     error,
     errorToHttp,
     errorToStatusCode,
@@ -40,6 +41,25 @@ describe("Error Handling Module", () => {
             const result = internalError(msg);
 
             expect(result).toEqual({ type: "InternalError", msg });
+        });
+    });
+
+    describe("duplicateError function", () => {
+        it("should create a DuplicateError with the given message", () => {
+            const msg = "Item already exists.";
+            const result = duplicateError(msg);
+
+            expect(result).toEqual({ type: "DuplicateError", msg });
+        });
+
+        it("should return the proper status code of a DuplicateError", () => {
+            const code = errorToStatusCode("DuplicateError");
+
+            // 409 Conflict
+            // This status code indicates that the request could not be
+            // completed due to a conflict with the current state of the
+            // resource.
+            expect(code).toEqual(409);
         });
     });
 

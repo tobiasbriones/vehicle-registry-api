@@ -8,10 +8,12 @@ import { StatusCodes } from "http-status-codes";
 
 export type ErrorType
     = "InternalError"
+    | "DuplicateError"
 
 export const errorToStatusCode = (error: ErrorType) => {
     const map: Record<ErrorType, StatusCodes> = {
         InternalError: StatusCodes.INTERNAL_SERVER_ERROR,
+        DuplicateError: StatusCodes.CONFLICT,
     };
 
     return map[error];
@@ -26,6 +28,11 @@ export const error = (type: ErrorType, msg: string): AppError => ({ type, msg })
 
 export const internalError = (msg: string): AppError => ({
     type: "InternalError",
+    msg,
+});
+
+export const duplicateError = (msg: string): AppError => ({
+    type: "DuplicateError",
     msg,
 });
 
