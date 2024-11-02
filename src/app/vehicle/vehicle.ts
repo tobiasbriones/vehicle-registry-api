@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { z } from "zod";
+
 /**
  * Represents a vehicle in the system.
  */
@@ -15,3 +17,9 @@ export type Vehicle = {
     /** For example, Camry, Mustang. */
     model: string,
 }
+
+export const vehicleRegistrationSchema = z.object({
+    number: z.string().max(20),
+    brand: z.string().max(100),
+    model: z.string().max(100),
+}).strict();

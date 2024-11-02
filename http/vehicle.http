@@ -2,3 +2,13 @@
 
 ### GET request to server root
 GET {{host}}/
+
+### Create Vehicle
+POST {{host}}/vehicles
+Content-Type: application/json
+
+{
+    "brand": "content",
+    "model": "content",
+    "number": "content"
+}
