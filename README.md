@@ -35,6 +35,16 @@ documentation.
 | `npm run view:coverage` | Opens the coverage report generated from tests.                         |
 | `npm run test:coverage` | Runs tests with coverage reporting, useful for clarity in automated CI. |
 
+## Vehicle Registry API
+
+| Endpoint    | Method | Description              |
+|-------------|--------|--------------------------|
+| `/`         | GET    | Welcome  server message. |
+| `/vehicles` | POST   | Registers a new vehicle. |
+
+The complete API documentation is
+at the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
+
 ## Environment Variables
 
 The app utilizes environment variables to set production values.
