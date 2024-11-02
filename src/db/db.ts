@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { Pool } from "pg";
+import pg from "pg";
+
+const { Pool } = pg;
+
 
 export type DbConfig = {
     user: string;
