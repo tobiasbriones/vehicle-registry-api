@@ -127,59 +127,59 @@ describe("VehicleService read method", () => {
             model: "Corolla",
             number: "ABC123",
         };
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
 
         mockPool.query = jest.fn().mockResolvedValueOnce({
             rowCount: 1,
             rows: [ vehicle ],
         });
 
-        const result = await service.read(mockId);
+        const result = await service.read(mockNumber);
 
         expect(result).toEqual(vehicle);
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
                 expect.stringContaining("SELECT *"),
-                [ mockId ],
+                [ mockNumber ],
             );
     });
 
     it("should return null when no vehicle is found", async () => {
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
 
         mockPool.query = jest.fn().mockResolvedValueOnce({
             rowCount: 0,
             rows: [],
         });
 
-        const result = await service.read(mockId);
+        const result = await service.read(mockNumber);
 
         expect(result).toBeNull();
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
                 expect.stringContaining("SELECT *"),
-                [ mockId ],
+                [ mockNumber ],
             );
     });
 
     it("should handle errors correctly", async () => {
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
         const mockError = new Error("Query failed");
 
         mockPool.query = jest.fn().mockRejectedValueOnce(mockError);
 
-        await expect(service.read(mockId))
+        await expect(service.read(mockNumber))
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to read vehicle with id ${ mockId }.`,
+                msg: `Fail to read vehicle with number ${ mockNumber }.`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
-                expect.stringContaining(`Fail to read vehicle with id ${ mockId }.`),
+                expect.stringContaining(`Fail to read vehicle with number ${ mockNumber }.`),
                 "Reason:",
                 String(mockError),
             );
@@ -202,36 +202,36 @@ describe("VehicleService update method", () => {
     it(
         "should return the updated vehicle when update is successful",
         async () => {
+            const mockNumber = "VIN-mock";
             const vehicle = {
+                number: mockNumber,
                 brand: "Toyota",
                 model: "Corolla",
-                number: "ABC123",
             };
-            const mockId = 1;
 
             mockPool.query = jest.fn().mockResolvedValueOnce({
                 rowCount: 1,
                 rows: [ vehicle ],
             });
 
-            const result = await service.update(mockId, vehicle);
+            const result = await service.update(vehicle);
 
             expect(result).toEqual(vehicle);
 
             expect(mockPool.query)
                 .toHaveBeenCalledWith(
                     expect.stringContaining("UPDATE vehicle"),
-                    [ vehicle.brand, vehicle.model, vehicle.number, mockId ],
+                    [ vehicle.brand, vehicle.model, mockNumber ],
                 );
         },
     );
 
     it("should return null when no vehicle is updated", async () => {
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
         const vehicle = {
+            number: mockNumber,
             brand: "Toyota",
             model: "Corolla",
-            number: "ABC123",
         };
 
         mockPool.query = jest.fn().mockResolvedValueOnce({
@@ -239,33 +239,33 @@ describe("VehicleService update method", () => {
             rows: [],
         });
 
-        const result = await service.update(mockId, vehicle);
+        const result = await service.update(vehicle);
 
         expect(result).toBeNull();
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
                 expect.stringContaining("UPDATE vehicle"),
-                [ vehicle.brand, vehicle.model, vehicle.number, mockId ],
+                [ vehicle.brand, vehicle.model, mockNumber ],
             );
     });
 
     it("should handle errors correctly", async () => {
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
         const vehicle = {
+            number: mockNumber,
             brand: "Toyota",
             model: "Corolla",
-            number: "ABC123",
         };
         const mockError = new Error("Query failed");
 
         mockPool.query = jest.fn().mockRejectedValueOnce(mockError);
 
-        await expect(service.update(mockId, vehicle))
+        await expect(service.update(vehicle))
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to update vehicle ${ objToString(vehicle) } with id ${ mockId }.`,
+                msg: `Fail to update vehicle ${ objToString(vehicle) } with number ${ mockNumber }.`,
             });
 
         expect(console.error)
@@ -293,58 +293,58 @@ describe("VehicleService delete method", () => {
     it(
         "should return true when the vehicle is successfully deleted",
         async () => {
-            const mockId = 1;
+            const mockNumber = "VIN-mock";
 
             mockPool.query = jest.fn().mockResolvedValueOnce({
                 rowCount: 1, // Simulating a successful deletion
             });
 
-            const result = await service.delete(mockId);
+            const result = await service.delete(mockNumber);
 
             expect(result).toBe(true);
 
             expect(mockPool.query)
                 .toHaveBeenCalledWith(
                     expect.stringContaining("DELETE"),
-                    [ mockId ],
+                    [ mockNumber ],
                 );
         },
     );
 
     it("should return false when no vehicle is deleted", async () => {
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
 
         mockPool.query = jest.fn().mockResolvedValueOnce({
             rowCount: 0, // Simulating that no rows were deleted
         });
 
-        const result = await service.delete(mockId);
+        const result = await service.delete(mockNumber);
 
         expect(result).toBe(false);
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
                 expect.stringContaining("DELETE"),
-                [ mockId ],
+                [ mockNumber ],
             );
     });
 
     it("should handle errors correctly", async () => {
-        const mockId = 1;
+        const mockNumber = "VIN-mock";
         const mockError = new Error("Query failed");
 
         mockPool.query = jest.fn().mockRejectedValueOnce(mockError);
 
-        await expect(service.delete(mockId))
+        await expect(service.delete(mockNumber))
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to delete vehicle with id ${ mockId }.`,
+                msg: `Fail to delete vehicle with number ${ mockNumber }.`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
-                expect.stringContaining(`Fail to delete vehicle with id ${ mockId }.`),
+                expect.stringContaining(`Fail to delete vehicle with number ${ mockNumber }.`),
                 "Reason:",
                 String(mockError),
             );

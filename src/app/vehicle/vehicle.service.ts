@@ -10,9 +10,9 @@ import { Vehicle } from "./vehicle";
 
 export type VehicleService = {
     create: (vehicle: Vehicle) => Promise<Vehicle>,
-    read: (id: number) => Promise<Vehicle | null>,
-    update: (id: number, vehicle: Vehicle) => Promise<Vehicle | null>,
-    delete: (id: number) => Promise<boolean>,
+    read: (number: string) => Promise<Vehicle | null>,
+    update: (vehicle: Vehicle) => Promise<Vehicle | null>,
+    delete: (number: string) => Promise<boolean>,
 }
 
 export const newVehicleService = (pool: Pool): VehicleService => ({
@@ -64,62 +64,61 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         return result;
     },
 
-    async read(id) {
+    async read(number) {
         const query = `
             SELECT *
             FROM vehicle
-            WHERE id = $1;
+            WHERE number = $1;
         `;
 
         const handleError = (reason: unknown) =>
-            withErrorMessage(`Fail to read vehicle with id ${ id }.`)
+            withErrorMessage(`Fail to read vehicle with number ${ number }.`)
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
         return pool
-            .query(query, [ id ])
+            .query(query, [ number ])
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
     },
 
-    async update(id, vehicle) {
-        const { brand, model, number } = vehicle;
+    async update(vehicle) {
+        const { number, brand, model } = vehicle;
         const query = `
             UPDATE vehicle
             SET brand  = $1,
-                model  = $2,
-                number = $3
-            WHERE id = $4
+                model  = $2
+            WHERE number = $3
             RETURNING *;
         `;
 
         const handleError = async (reason: unknown) => {
             return withErrorMessage(
-                `Fail to update vehicle ${ objToString(vehicle) } with id ${ id }.`,
+                `Fail to update vehicle ${ objToString(vehicle) } with number ${ number }.`,
             ).logInternalReason(reason)
              .catch(rejectInternalError);
         };
 
         return pool
-            .query(query, [ brand, model, number, id ])
+            .query(query, [ brand, model, number ])
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
     },
 
-    async delete(id) {
+    async delete(number) {
         const query = `
             DELETE
             FROM vehicle
-            WHERE id = $1;
+            WHERE number = $1;
         `;
 
         const handleError = (reason: unknown) =>
-            withErrorMessage(`Fail to delete vehicle with id ${ id }.`)
+            withErrorMessage(`Fail to delete vehicle with number ${ number }.`)
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
         return pool
-            .query(query, [ id ])
+            .query(query, [ number ])
             .then(res => res.rowCount === 1)
             .catch(handleError);
     },
