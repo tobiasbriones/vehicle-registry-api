@@ -37,10 +37,14 @@ documentation.
 
 ## Vehicle Registry API
 
-| Endpoint    | Method | Description              |
-|-------------|--------|--------------------------|
-| `/`         | GET    | Welcome  server message. |
-| `/vehicles` | POST   | Registers a new vehicle. |
+| Endpoint               | Method | Description                 |
+|------------------------|--------|-----------------------------|
+| `/`                    | GET    | Welcome  server message.    |
+| `/vehicles`            | POST   | Registers a new vehicle.    |
+| `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
+| `/vehicles`            | GET    | Fetches a list of vehicles. |
+| `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
+| `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
 
 The complete API documentation is
 at the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
