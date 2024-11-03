@@ -6,7 +6,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "build": "tsc && tsc-alias",
+        "build": "npm run test && tsc && tsc-alias",
         "start": "node dist/app/index.js",
         "start:dev": "npx nodemon --exec 'npm run lint && tsx src/app/index.ts' src/index.ts",
         "lint": "eslint .",
