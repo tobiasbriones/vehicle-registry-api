@@ -67,7 +67,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
 
     async read(number) {
         const query = `
-            SELECT *
+            SELECT number, brand, model
             FROM vehicle
             WHERE number = $1;
         `;
@@ -87,7 +87,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         const offset = (page - 1) * limit;
 
         const query = `
-            SELECT *
+            SELECT number, brand, model
             FROM vehicle
             LIMIT $1 OFFSET $2;
         `;

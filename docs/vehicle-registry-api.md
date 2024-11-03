@@ -151,7 +151,6 @@ Fetches details of a specific vehicle by its unique vehicle number.
     - **Schema**:
       ```json
       {
-        "id": "number",
         "number": "string",
         "brand": "string",
         "model": "string"
@@ -160,7 +159,6 @@ Fetches details of a specific vehicle by its unique vehicle number.
     - **Example**:
       ```json
       {
-        "id": 1,
         "number": "VIN-example",
         "brand": "Toyota",
         "model": "Corolla"
@@ -213,7 +211,6 @@ Retrieves a paginated list of all vehicles in the database.
       ```json
       [
         {
-          "id": "number",
           "number": "string",
           "brand": "string",
           "model": "string"
@@ -224,13 +221,11 @@ Retrieves a paginated list of all vehicles in the database.
       ```json
       [
         {
-          "id": 1,
           "number": "VIN-123",
           "brand": "Toyota",
           "model": "Camry"
         },
         {
-          "id": 2,
           "number": "VIN-456",
           "brand": "Honda",
           "model": "Civic"

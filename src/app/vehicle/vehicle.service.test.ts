@@ -140,7 +140,7 @@ describe("VehicleService read method", () => {
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
-                expect.stringContaining("SELECT *"),
+                expect.stringContaining("SELECT number, brand, model"),
                 [ mockNumber ],
             );
     });
@@ -159,7 +159,7 @@ describe("VehicleService read method", () => {
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
-                expect.stringContaining("SELECT *"),
+                expect.stringContaining("SELECT number, brand, model"),
                 [ mockNumber ],
             );
     });
@@ -219,7 +219,7 @@ describe("Vehicle Service readAll method", () => {
 
         expect(mockPool.query)
             .toHaveBeenCalledWith(
-                expect.stringContaining("SELECT *"),
+                expect.stringContaining("SELECT number, brand, model"),
                 [ limit, offset ],
             );
 
