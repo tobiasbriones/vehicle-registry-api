@@ -20,5 +20,10 @@ export function newAppRouter({ vehicleController }: AppConfig) {
         vehicleController.create,
     );
 
+    router.get(
+        "/vehicles/:number",
+        vehicleController.read,
+    );
+
     return router;
 }

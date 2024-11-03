@@ -9,7 +9,8 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export type VehicleController = {
-    create: (req: Request, res: Response) => Promise<void>
+    create: (req: Request, res: Response) => Promise<void>,
+    read: (req: Request, res: Response) => Promise<void>,
 }
 
 export const newVehicleController = (service: VehicleService): VehicleController => ({
@@ -19,6 +20,24 @@ export const newVehicleController = (service: VehicleService): VehicleController
         service
             .create(vehicle)
             .then(vehicle => res.status(StatusCodes.CREATED).json(vehicle))
+            .catch(respondHttpError(res));
+    },
+
+    async read(req, res) {
+        const { number } = req.params;
+
+        const notFound = () => res
+            .status(StatusCodes.NOT_FOUND)
+            .json(`Vehicle number not found: ${ number }`);
+
+        const respond = (vehicle: Vehicle | null) =>
+            vehicle !== null
+            ? res.status(StatusCodes.OK).json(vehicle)
+            : notFound();
+
+        service
+            .read(number)
+            .then(respond)
             .catch(respondHttpError(res));
     },
 });

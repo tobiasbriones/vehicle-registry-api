@@ -2,10 +2,11 @@
 
 ## Endpoint Summary
 
-| Endpoint    | Method | Description              |
-|-------------|--------|--------------------------|
-| `/`         | GET    | Welcome  server message. |
-| `/vehicles` | POST   | Registers a new vehicle. |
+| Endpoint               | Method | Description              |
+|------------------------|--------|--------------------------|
+| `/`                    | GET    | Welcome  server message. |
+| `/vehicles`            | POST   | Registers a new vehicle. |
+| `/vehicles/{ number }` | GET    | Fetches a vehicle.       |
 
 <details>
   <summary>GET /</summary>
@@ -96,6 +97,78 @@ Registers a new vehicle in the database.
       ```json
       {
         "error": "A vehicle with this number already exists."
+      }
+      ```
+
+- **500 Internal Server Error**
+    - **Description**: An unexpected error occurred on the server.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Internal server error"
+      }
+      ```
+
+</details>
+
+<details>
+  <summary>GET /vehicles/{number}</summary>
+
+### Description
+
+Fetches details of a specific vehicle by its unique vehicle number.
+
+#### Request
+
+- **Path Parameters**:
+    - `number` (string): Unique identifier for the vehicle.
+- **Query Parameters**: None
+- **Request Body**: None
+
+#### Responses
+
+- **200 OK**
+    - **Description**: Vehicle details successfully retrieved.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "id": "number",
+        "number": "string",
+        "brand": "string",
+        "model": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "id": 1,
+        "number": "VIN-example",
+        "brand": "Toyota",
+        "model": "Corolla"
+      }
+      ```
+
+- **404 Not Found**
+    - **Description**: Vehicle with the specified number was not found.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Vehicle number not found: VIN-example"
       }
       ```
 
