@@ -5,7 +5,7 @@
 import { objToString } from "@/utils";
 import { rejectDuplicateError, rejectInternalError } from "@app/app.error";
 import { withErrorMessage } from "@log/log";
-import { Pool, QueryResult } from "pg";
+import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
 
 export type VehicleService = {
@@ -22,7 +22,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         const query = `
             INSERT INTO vehicle (brand, model, number)
             VALUES ($1, $2, $3)
-            RETURNING *;
+            RETURNING number, brand, model;
         `;
 
         const rejectReason = (reason: unknown) => (msg: string) => {
@@ -110,7 +110,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
             SET brand  = $1,
                 model  = $2
             WHERE number = $3
-            RETURNING *;
+            RETURNING number, brand, model;
         `;
 
         const handleError = async (reason: unknown) => {
@@ -120,16 +120,9 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
              .catch(rejectInternalError);
         };
 
-        const queryResultToVehicle = (res: QueryResult) => {
-            const obj = res.rows[0];
-
-            delete obj["id"];
-            return obj;
-        };
-
         return pool
             .query(query, [ brand, model, number ])
-            .then(res => res.rowCount === 1 ? queryResultToVehicle(res) : null)
+            .then(res => res.rowCount === 1 ? res.rows[0] : null)
             .catch(handleError);
     },
 

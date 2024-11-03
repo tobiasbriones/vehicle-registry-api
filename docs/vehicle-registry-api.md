@@ -95,15 +95,14 @@ Registers a new vehicle in the database.
     - **Schema**:
       ```json
       {
-        "model": "string",
         "number": "string",
-        "brand": "string"
+        "brand": "string",
+        "model": "string"
       }
       ```
     - **Example**:
       ```json
       {
-        "id": 1,
         "number": "VIN-123",
         "brand": "Toyota",
         "model": "Camry"
