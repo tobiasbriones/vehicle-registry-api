@@ -3,14 +3,19 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 /**
- * It logs an internal error given the "public" message and the internal reason
- * that should stay private in the server logs.
+ * Creates a logger with a given public error message.
  *
- * @param {string} msg User friendly error message to forward
- * @param reason Private server error
- * @returns {Promise<never>} Rejected Promise with the original `msg`
+ * @param {string} msg User friendly error message to forward in the logs
  */
-export function internalError(msg: string, reason: unknown): Promise<never> {
-    console.error(msg, "Reason:", reason);
-    return Promise.reject();
-}
+export const withErrorMessage = (msg: string) => ({
+    /**
+     * Logs an internal error given the "public" `msg` and the internal
+     * `reason` that should stay private in the server logs.
+     *
+     * @param reason Private server error
+     */
+    logInternalReason(reason: unknown): Promise<never> {
+        console.error(msg, "Reason:", String(reason));
+        return Promise.reject(msg);
+    },
+});

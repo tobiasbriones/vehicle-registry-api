@@ -10,20 +10,45 @@ Backend API for a vehicle registration web app that allows entrance and leave.
 
 ## Getting Started
 
-This is a Node + Express.js + TypeScript application.
+The Node + Express.js + TypeScript application provides an API for vehicle
+operations.
 
-| Command         | Description                                                                                             |
-|-----------------|---------------------------------------------------------------------------------------------------------|
-| `npm install`   | Installs project dependencies.                                                                          |
-| `npm start`     | Runs the development server.                                                                            |
-| `npm run lint`  | Executes ESLint to check code quality using static analysis.                                            |
-| `npm run build` | Builds the **production** version in the `dist` directory. Use `node dist/index.js` or `pm2` to run it. |
-| `npm run clean` | Removes generated project files.                                                                        |
+The following scripts are common to the project, while the next sections provide
+particular scripts for development and production.
 
-As said above, you can run the production app with `node dist/index.js` or the
-[PM2](https://www.npmjs.com/package/pm2) process manager.
+| Command         | Description                                                  |
+|-----------------|--------------------------------------------------------------|
+| `npm install`   | Installs project dependencies.                               |
+| `npm run lint`  | Executes ESLint to check code quality using static analysis. |
+| `npm run clean` | Removes generated project files.                             |
+
+### Development
+
+| Command             | Description                  |
+|---------------------|------------------------------|
+| `npm run start:dev` | Runs the development server. |
+
+### Deployment
+
+| Command         | Description                                                |
+|-----------------|------------------------------------------------------------|
+| `npm run build` | Builds the **production** version in the `dist` directory. |
+| `npm run start` | Runs the production server (`node dist/app/index.js`).     |
+
+You can run the production app with the default script `npm start` which uses
+`node`, or use the [PM2](https://www.npmjs.com/package/pm2) process manager.
+
+To deploy the application you will need to clone the repository into your
+machine and:
+
+- `npm install`
+- `npm run build`
+- `npm run start`
 
 ### Testing
+
+The application specifies unit tests to enhance its reliability and
+documentation.
 
 | Command                 | Description                                                             |
 |-------------------------|-------------------------------------------------------------------------|
@@ -31,6 +56,20 @@ As said above, you can run the production app with `node dist/index.js` or the
 | `npm run test:watch`    | Runs tests in watch mode for continuous testing during development.     |
 | `npm run view:coverage` | Opens the coverage report generated from tests.                         |
 | `npm run test:coverage` | Runs tests with coverage reporting, useful for clarity in automated CI. |
+
+## Vehicle Registry API
+
+| Endpoint               | Method | Description                 |
+|------------------------|--------|-----------------------------|
+| `/`                    | GET    | Welcome  server message.    |
+| `/vehicles`            | POST   | Registers a new vehicle.    |
+| `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
+| `/vehicles`            | GET    | Fetches a list of vehicles. |
+| `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
+| `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
+
+The complete API documentation is
+at the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
 
 ## Environment Variables
 
@@ -60,6 +99,16 @@ into your production environment.
 | `DB_NAME`     | Name of the PostgreSQL database to connect to.                                           | `vehicle_registry` | `local_vehicle_registry` |
 | `DB_PASSWORD` | Password for the PostgreSQL user.                                                        | `${ db_password }` | `${ dev_db_password }`   |
 | `DB_PORT`     | Port on which the PostgreSQL database server is running.                                 | `5432`             | `5432`                   |
+
+## Testing HTTP Request
+
+The [./http](http) project contains `http` files with requests you can run from
+your IDE to test the application API.
+
+## Database
+
+The [./database](database) project defines the PSQL source code and
+documentation for the database of the Vehicle Registry application.
 
 ## About
 

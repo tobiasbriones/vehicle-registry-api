@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { internalError } from "./log";
+import { withErrorMessage } from "./log";
 
 describe("internalError", () => {
     const mockReason = new Error("Internal database error");
@@ -16,12 +16,17 @@ describe("internalError", () => {
         jest.restoreAllMocks();
     });
 
-    it("should log the error message and reason to console", async () => {
-        await expect(internalError(userMessage, mockReason))
-            .rejects
-            .toBeUndefined();
+    it("should log the correct error message and reason", async () => {
+        const logger = withErrorMessage(userMessage);
 
-        expect(console.error)
-            .toHaveBeenCalledWith(userMessage, "Reason:", mockReason);
+        await expect(logger.logInternalReason(mockReason))
+            .rejects
+            .toEqual(userMessage);
+
+        expect(console.error).toHaveBeenCalledWith(
+            userMessage,
+            "Reason:",
+            mockReason.toString()
+        );
     });
 });

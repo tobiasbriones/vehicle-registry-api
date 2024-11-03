@@ -130,5 +130,9 @@
         "**/*.test.ts",
         "**/*.test.js",
         "**/__tests__/**"
-    ]
+        ],
+    "tsc-alias": {
+        "resolveFullPaths": true,
+        "verbose": false
+    }
 }
