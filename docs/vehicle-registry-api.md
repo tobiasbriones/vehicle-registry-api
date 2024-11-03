@@ -8,6 +8,8 @@
 | `/vehicles`            | POST   | Registers a new vehicle.    |
 | `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
 | `/vehicles`            | GET    | Fetches a list of vehicles. |
+| `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
+| `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
 
 ## Commons
 
@@ -295,6 +297,60 @@ VIN). Only the `brand` and `model` fields can be updated.
 
 - **404 Not Found**
     - **Description**: The specified vehicle does not exist.
+
+- **500 Internal Server Error**
+
+</details>
+
+<details>
+  <summary>DELETE /vehicles/:number</summary>
+
+### Description
+
+Deletes a vehicle with the specified unique vehicle number.
+
+#### Request
+
+- **Path Parameters**:
+    - **number**: Required. The unique identifier (vehicle number) of the
+      vehicle to delete.
+
+- **Request Body**: None
+
+#### Responses
+
+- **200 OK**
+    - **Description**: Indicates that the vehicle was successfully deleted.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "message": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "message": "Vehicle with number VIN-123 deleted successfully."
+      }
+      ```
+
+- **404 Not Found**
+    - **Description**: Indicates that no vehicle with the specified number was
+      found.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "Vehicle not found: VIN-123"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Vehicle not found: VIN-123"
+      }
+      ```
 
 - **500 Internal Server Error**
 

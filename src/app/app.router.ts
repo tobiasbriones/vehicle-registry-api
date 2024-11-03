@@ -33,5 +33,7 @@ export function newAppRouter({ vehicleController }: AppConfig) {
         vehicleController.update,
     );
 
+    router.delete("/vehicles/:number", vehicleController.delete);
+
     return router;
 }

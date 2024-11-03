@@ -27,3 +27,7 @@ Content-Type: application/json
     "brand": "Honda",
     "model": "Civic"
 }
+
+### Delete Vehicle
+DELETE {{host}}/vehicles/VIN-example
+Content-Type: application/json

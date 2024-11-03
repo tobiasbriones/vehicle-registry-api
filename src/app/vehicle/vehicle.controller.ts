@@ -13,6 +13,7 @@ export type VehicleController = {
     read: (req: Request, res: Response) => Promise<void>,
     readAll: (req: Request, res: Response) => Promise<void>,
     update: (req: Request, res: Response) => Promise<void>,
+    delete: (req: Request, res: Response) => Promise<void>,
 }
 
 export const newVehicleController = (service: VehicleService): VehicleController => ({
@@ -71,6 +72,24 @@ export const newVehicleController = (service: VehicleService): VehicleController
 
         service
             .update(vehicle)
+            .then(respond)
+            .catch(respondHttpError(res));
+    },
+
+    async delete(req, res) {
+        const { number } = req.params;
+
+        const respond = (deletedVehicle: boolean) =>
+            deletedVehicle
+            ? res.status(StatusCodes.OK)
+                 .json({
+                     message: `Vehicle with number ${ number } deleted successfully.`,
+                 })
+            : res.status(StatusCodes.NOT_FOUND)
+                 .json({ error: `Vehicle not found: ${number}` });
+
+        service
+            .delete(number)
             .then(respond)
             .catch(respondHttpError(res));
     },
