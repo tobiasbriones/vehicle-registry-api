@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { objToString } from "@/utils";
 import { withErrorMessage } from "@log/log";
 import { Response } from "express";
 import {
