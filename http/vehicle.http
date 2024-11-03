@@ -18,3 +18,12 @@ GET {{host}}/vehicles/VIN-example
 
 ### Fetch Vehicles
 GET {{host}}/vehicles/?limit=2&page=1
+
+### Update Vehicle
+PUT {{host}}/vehicles/VIN-example
+Content-Type: application/json
+
+{
+    "brand": "Honda",
+    "model": "Civic"
+}

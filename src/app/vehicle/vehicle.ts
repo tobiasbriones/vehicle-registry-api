@@ -23,3 +23,8 @@ export const vehicleRegistrationSchema = z.object({
     brand: z.string().max(100),
     model: z.string().max(100),
 }).strict();
+
+export const vehicleUpdateSchema = z.object({
+    brand: z.string().max(100),
+    model: z.string().max(100),
+}).strict();

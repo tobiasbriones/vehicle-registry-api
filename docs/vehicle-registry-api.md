@@ -236,3 +236,66 @@ Retrieves a paginated list of all vehicles in the database.
 - **500 Internal Server Error**
 
 </details>
+
+<details>
+  <summary>PUT /vehicles/:number</summary>
+
+### Description
+
+Updates the details of an existing vehicle based on its unique number (e.g.,
+VIN). Only the `brand` and `model` fields can be updated.
+
+#### Request
+
+- **Path Parameters**:
+    - **number**: Required. The unique identifier of the vehicle to update.
+
+- **Request Body**:
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "brand": "string",
+        "model": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "brand": "Ford",
+        "model": "Mustang"
+      }
+      ```
+
+#### Responses
+
+- **200 OK**
+    - **Description**: The updated vehicle details.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "number": "string",
+        "brand": "string",
+        "model": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "number": "VIN-123",
+        "brand": "Ford",
+        "model": "Mustang"
+      }
+      ```
+
+- **400 Bad Request**
+    - **Description**: Invalid request body, typically due to missing or
+      incorrect fields.
+
+- **404 Not Found**
+    - **Description**: The specified vehicle does not exist.
+
+- **500 Internal Server Error**
+
+</details>

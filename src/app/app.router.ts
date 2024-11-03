@@ -3,7 +3,10 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { AppConfig } from "@app/app.config";
-import { vehicleRegistrationSchema } from "@app/vehicle/vehicle";
+import {
+    vehicleRegistrationSchema,
+    vehicleUpdateSchema,
+} from "@app/vehicle/vehicle";
 import express from "express";
 import { validateBody } from "./app.validation";
 
@@ -23,6 +26,12 @@ export function newAppRouter({ vehicleController }: AppConfig) {
     router.get("/vehicles/:number", vehicleController.read);
 
     router.get("/vehicles", vehicleController.readAll);
+
+    router.put(
+        "/vehicles/:number",
+        validateBody(vehicleUpdateSchema),
+        vehicleController.update,
+    );
 
     return router;
 }
