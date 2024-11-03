@@ -11,3 +11,10 @@ the development database.
 
 The common SQL for all databases is in
 the [vehicle_registry.local.sql](vehicle_registry.local.sql) source file.
+
+## Database Design
+
+The image [vehicle_registry.png](vehicle_registry.png) contains the exported 
+PSQL database diagram.
+
+![](vehicle_registry.png)
