@@ -31,6 +31,8 @@ This section details common information about all the requests.
       }
       ```
 
+## Endpoints
+
 <details>
   <summary>GET /</summary>
 
