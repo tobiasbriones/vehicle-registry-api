@@ -110,6 +110,11 @@ your IDE to test the application API.
 The [./database](database) project defines the PSQL source code and
 documentation for the database of the Vehicle Registry application.
 
+## Contact
+
+Tobias Briones: [GitHub](https://github.com/tobiasbriones)
+[LinkedIn](https://linkedin.com/in/tobiasbriones)
+
 ## About
 
 **Vehicle Registry API**
