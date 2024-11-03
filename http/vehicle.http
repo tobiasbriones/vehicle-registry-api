@@ -15,3 +15,6 @@ Content-Type: application/json
 
 ### Fetch Vehicle
 GET {{host}}/vehicles/VIN-example
+
+### Fetch Vehicles
+GET {{host}}/vehicles/?limit=2&page=2

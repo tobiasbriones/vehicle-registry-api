@@ -22,5 +22,7 @@ export function newAppRouter({ vehicleController }: AppConfig) {
 
     router.get("/vehicles/:number", vehicleController.read);
 
+    router.get("/vehicles", vehicleController.readAll);
+
     return router;
 }

@@ -11,6 +11,7 @@ import { Vehicle } from "./vehicle";
 export type VehicleService = {
     create: (vehicle: Vehicle) => Promise<Vehicle>,
     read: (number: string) => Promise<Vehicle | null>,
+    readAll: (limit: number, page: number) => Promise<Vehicle[]>,
     update: (vehicle: Vehicle) => Promise<Vehicle | null>,
     delete: (number: string) => Promise<boolean>,
 }
@@ -79,6 +80,26 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         return pool
             .query(query, [ number ])
             .then(res => res.rowCount === 1 ? res.rows[0] : null)
+            .catch(handleError);
+    },
+
+    async readAll(limit, page) {
+        const offset = (page - 1) * limit;
+
+        const query = `
+            SELECT *
+            FROM vehicle
+            LIMIT $1 OFFSET $2;
+        `;
+
+        const handleError = (reason: unknown) =>
+            withErrorMessage(`Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`)
+                .logInternalReason(reason)
+                .catch(rejectInternalError);
+
+        return pool
+            .query(query, [ limit, offset ])
+            .then(res => res.rows)
             .catch(handleError);
     },
 

@@ -11,6 +11,7 @@ import { StatusCodes } from "http-status-codes";
 export type VehicleController = {
     create: (req: Request, res: Response) => Promise<void>,
     read: (req: Request, res: Response) => Promise<void>,
+    readAll: (req: Request, res: Response) => Promise<void>,
 }
 
 export const newVehicleController = (service: VehicleService): VehicleController => ({
@@ -38,6 +39,21 @@ export const newVehicleController = (service: VehicleService): VehicleController
         service
             .read(number)
             .then(respond)
+            .catch(respondHttpError(res));
+    },
+
+    async readAll(req, res) {
+        const queryIntParam = (key: string, def: number) =>
+            parseInt(req.query[key] as string) || def;
+
+        const defLimit = 10;
+        const defPage = 1;
+        const limit = Math.max(queryIntParam("limit", defLimit), 0);
+        const page = Math.max(queryIntParam("page", defPage), 1);
+
+        service
+            .readAll(limit, page)
+            .then(vehicles => res.status(StatusCodes.OK).json(vehicles))
             .catch(respondHttpError(res));
     },
 });

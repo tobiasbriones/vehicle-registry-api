@@ -186,6 +186,68 @@ describe("VehicleService read method", () => {
     });
 });
 
+describe("Vehicle Service readAll method", () => {
+    const limit = 5;
+    const page = 2;
+    let mockPool: jest.Mocked<Pool>;
+    let service: VehicleService;
+
+    beforeEach(() => {
+        mockPool = new Pool() as jest.Mocked<Pool>;
+        service = newVehicleService(mockPool);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should retrieve vehicles with correct limit and offset", async () => {
+        const mockVehicles = [
+            { id: 1, number: "VIN-001", brand: "Toyota", model: "Corolla" },
+            { id: 2, number: "VIN-002", brand: "Honda", model: "Civic" },
+        ];
+        mockPool.query = jest.fn().mockResolvedValueOnce({
+            rows: mockVehicles,
+            rowCount: mockVehicles.length,
+        });
+
+        const result = await service.readAll(limit, page);
+
+        // Check if the pool.query was called with the correct SQL and
+        // parameters
+        const offset = (page - 1) * limit;
+
+        expect(mockPool.query)
+            .toHaveBeenCalledWith(
+                expect.stringContaining("SELECT *"),
+                [ limit, offset ],
+            );
+
+        // Check if the result matches the mock data
+        expect(result).toEqual(mockVehicles);
+    });
+
+    it("should handle errors by rejecting with an internal error", async () => {
+        const mockError = new Error("Database connection error");
+
+        mockPool.query = jest.fn().mockRejectedValueOnce(mockError);
+
+        await expect(service.readAll(limit, page))
+            .rejects
+            .toMatchObject({
+                type: "InternalError",
+                msg: `Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`,
+            });
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
+                expect.stringContaining(`Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`),
+                "Reason:",
+                String(mockError),
+            );
+    });
+});
+
 describe("VehicleService update method", () => {
     let mockPool: jest.Mocked<Pool>;
     let service: VehicleService;

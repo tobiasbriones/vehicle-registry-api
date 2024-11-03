@@ -2,11 +2,12 @@
 
 ## Endpoint Summary
 
-| Endpoint               | Method | Description              |
-|------------------------|--------|--------------------------|
-| `/`                    | GET    | Welcome  server message. |
-| `/vehicles`            | POST   | Registers a new vehicle. |
-| `/vehicles/{ number }` | GET    | Fetches a vehicle.       |
+| Endpoint               | Method | Description                 |
+|------------------------|--------|-----------------------------|
+| `/`                    | GET    | Welcome  server message.    |
+| `/vehicles`            | POST   | Registers a new vehicle.    |
+| `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
+| `/vehicles`            | GET    | Fetches a list of vehicles. |
 
 <details>
   <summary>GET /</summary>
@@ -170,6 +171,75 @@ Fetches details of a specific vehicle by its unique vehicle number.
       {
         "error": "Vehicle number not found: VIN-example"
       }
+      ```
+
+- **500 Internal Server Error**
+    - **Description**: An unexpected error occurred on the server.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Internal server error"
+      }
+      ```
+
+</details>
+
+<details>
+  <summary>GET /vehicles</summary>
+
+### Description
+
+Retrieves a paginated list of all vehicles in the database.
+
+#### Request
+
+- **Path Parameters**: None
+- **Query Parameters**:
+    - **limit**: Optional. The maximum number of vehicles to return per page.
+      Defaults to `10`. Must be greater than or equal to `0`.
+    - **page**: Optional. The page number to retrieve. Defaults to `1`. Must be
+      greater than or equal to `1`.
+- **Request Body**: None
+
+#### Responses
+
+- **200 OK**
+    - **Description**: A list of vehicles for the specified page and limit.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      [
+        {
+          "id": "number",
+          "number": "string",
+          "brand": "string",
+          "model": "string"
+        }
+      ]
+      ```
+    - **Example**:
+      ```json
+      [
+        {
+          "id": 1,
+          "number": "VIN-123",
+          "brand": "Toyota",
+          "model": "Camry"
+        },
+        {
+          "id": 2,
+          "number": "VIN-456",
+          "brand": "Honda",
+          "model": "Civic"
+        }
+      ]
       ```
 
 - **500 Internal Server Error**
