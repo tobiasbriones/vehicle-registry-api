@@ -9,6 +9,28 @@
 | `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
 | `/vehicles`            | GET    | Fetches a list of vehicles. |
 
+## Commons
+
+This section details common information about all the requests.
+
+### Responses
+
+- **500 Internal Server Error**
+    - **Description**: An unexpected error occurred on the server.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Internal server error"
+      }
+      ```
+
 <details>
   <summary>GET /</summary>
 
@@ -102,20 +124,6 @@ Registers a new vehicle in the database.
       ```
 
 - **500 Internal Server Error**
-    - **Description**: An unexpected error occurred on the server.
-    - **Content-Type**: `application/json`
-    - **Schema**:
-      ```json
-      {
-        "error": "string"
-      }
-      ```
-    - **Example**:
-      ```json
-      {
-        "error": "Internal server error"
-      }
-      ```
 
 </details>
 
@@ -174,20 +182,6 @@ Fetches details of a specific vehicle by its unique vehicle number.
       ```
 
 - **500 Internal Server Error**
-    - **Description**: An unexpected error occurred on the server.
-    - **Content-Type**: `application/json`
-    - **Schema**:
-      ```json
-      {
-        "error": "string"
-      }
-      ```
-    - **Example**:
-      ```json
-      {
-        "error": "Internal server error"
-      }
-      ```
 
 </details>
 
@@ -243,19 +237,5 @@ Retrieves a paginated list of all vehicles in the database.
       ```
 
 - **500 Internal Server Error**
-    - **Description**: An unexpected error occurred on the server.
-    - **Content-Type**: `application/json`
-    - **Schema**:
-      ```json
-      {
-        "error": "string"
-      }
-      ```
-    - **Example**:
-      ```json
-      {
-        "error": "Internal server error"
-      }
-      ```
 
 </details>
