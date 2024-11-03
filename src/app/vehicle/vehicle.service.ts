@@ -5,7 +5,7 @@
 import { objToString } from "@/utils";
 import { rejectDuplicateError, rejectInternalError } from "@app/app.error";
 import { withErrorMessage } from "@log/log";
-import { Pool } from "pg";
+import { Pool, QueryResult } from "pg";
 import { Vehicle } from "./vehicle";
 
 export type VehicleService = {
@@ -120,9 +120,16 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
              .catch(rejectInternalError);
         };
 
+        const queryResultToVehicle = (res: QueryResult) => {
+            const obj = res.rows[0];
+
+            delete obj["id"];
+            return obj;
+        };
+
         return pool
             .query(query, [ brand, model, number ])
-            .then(res => res.rowCount === 1 ? res.rows[0] : null)
+            .then(res => res.rowCount === 1 ? queryResultToVehicle(res) : null)
             .catch(handleError);
     },
 
