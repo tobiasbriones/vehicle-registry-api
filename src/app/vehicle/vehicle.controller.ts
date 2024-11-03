@@ -31,7 +31,7 @@ export const newVehicleController = (service: VehicleService): VehicleController
 
         const notFound = () => res
             .status(StatusCodes.NOT_FOUND)
-            .json(`Vehicle number not found: ${ number }`);
+            .json({ error: `Vehicle number not found: ${ number }` });
 
         const respond = (vehicle: Vehicle | null) =>
             vehicle !== null
