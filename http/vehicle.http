@@ -1,0 +1,34 @@
+@host = http://localhost:3000
+#@host = https://vehicle-registry-api.onrender.com
+
+### GET request to server root
+GET {{host}}/
+
+### Create Vehicle
+POST {{host}}/vehicles
+Content-Type: application/json
+
+{
+    "number": "VIN-example",
+    "brand": "Toyota",
+    "model": "Camry"
+}
+
+### Fetch Vehicle
+GET {{host}}/vehicles/VIN-example
+
+### Fetch Vehicles
+GET {{host}}/vehicles/?limit=2&page=1
+
+### Update Vehicle
+PUT {{host}}/vehicles/VIN-example
+Content-Type: application/json
+
+{
+    "brand": "Honda",
+    "model": "Civic"
+}
+
+### Delete Vehicle
+DELETE {{host}}/vehicles/VIN-example
+Content-Type: application/json
