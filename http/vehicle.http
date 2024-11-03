@@ -1,4 +1,5 @@
 @host = http://localhost:3000
+#@host = https://vehicle-registry-api.onrender.com
 
 ### GET request to server root
 GET {{host}}/
