@@ -15,7 +15,10 @@ export type DbConfig = {
 }
 
 export function newDbPool(config: DbConfig) {
-    return new Pool(config);
+    return new Pool({
+        ...config,
+        ssl: process.env.ENV_MODE === "production",
+    });
 }
 
 export function newDbPoolFromEnv() {

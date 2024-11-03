@@ -35,7 +35,10 @@ describe("Database Configuration", () => {
 
         const pool = newDbPoolFromEnv();
 
-        expect(Pool).toHaveBeenCalledWith(expectedConfig);
+        expect(Pool)
+            .toHaveBeenCalledWith(
+                expect.objectContaining(expectedConfig),
+            );
         expect(pool).toBeInstanceOf(Pool);
     });
 
@@ -58,7 +61,10 @@ describe("Database Configuration", () => {
 
             const pool = newDbPoolFromEnv();
 
-            expect(Pool).toHaveBeenCalledWith(expectedConfig);
+            expect(Pool)
+                .toHaveBeenCalledWith(
+                    expect.objectContaining(expectedConfig),
+                );
             expect(pool).toBeInstanceOf(Pool);
         },
     );
@@ -74,6 +80,9 @@ describe("Database Configuration", () => {
 
         newDbPool(config);
 
-        expect(Pool).toHaveBeenCalledWith(config);
+        expect(Pool)
+            .toHaveBeenCalledWith(
+                expect.objectContaining(config),
+            );
     });
 });
