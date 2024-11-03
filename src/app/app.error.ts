@@ -66,7 +66,7 @@ export const respondHttpError = (res: Response) => (error: unknown) => {
     else {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ error: objToString(error) });
+            .json({ error: JSON.parse(objToString(error)) });
     }
 };
 

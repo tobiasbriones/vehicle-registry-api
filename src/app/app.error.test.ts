@@ -155,6 +155,6 @@ describe("respondHttpError", () => {
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json)
-            .toHaveBeenCalledWith({ error: objToString(unknownError) });
+            .toHaveBeenCalledWith({ error: unknownError });
     });
 });
