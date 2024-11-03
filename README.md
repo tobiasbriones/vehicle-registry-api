@@ -10,18 +10,40 @@ Backend API for a vehicle registration web app that allows entrance and leave.
 
 ## Getting Started
 
-This is a Node + Express.js + TypeScript application.
+The Node + Express.js + TypeScript application provides an API for vehicle
+operations.
 
-| Command         | Description                                                                                             |
-|-----------------|---------------------------------------------------------------------------------------------------------|
-| `npm install`   | Installs project dependencies.                                                                          |
-| `npm start`     | Runs the development server.                                                                            |
-| `npm run lint`  | Executes ESLint to check code quality using static analysis.                                            |
-| `npm run build` | Builds the **production** version in the `dist` directory. Use `node dist/index.js` or `pm2` to run it. |
-| `npm run clean` | Removes generated project files.                                                                        |
+The following scripts are common to the project, while the next sections provide
+particular scripts for development and production.
 
-As said above, you can run the production app with `node dist/index.js` or the
-[PM2](https://www.npmjs.com/package/pm2) process manager.
+| Command         | Description                                                  |
+|-----------------|--------------------------------------------------------------|
+| `npm install`   | Installs project dependencies.                               |
+| `npm run lint`  | Executes ESLint to check code quality using static analysis. |
+| `npm run clean` | Removes generated project files.                             |
+
+### Development
+
+| Command             | Description                  |
+|---------------------|------------------------------|
+| `npm run start:dev` | Runs the development server. |
+
+### Deployment
+
+| Command         | Description                                                |
+|-----------------|------------------------------------------------------------|
+| `npm run build` | Builds the **production** version in the `dist` directory. |
+| `npm run start` | Runs the production server (`node dist/app/index.js`).     |
+
+You can run the production app with the default script `npm start` which uses
+`node`, or use the [PM2](https://www.npmjs.com/package/pm2) process manager.
+
+To deploy the application you will need to clone the repository into your
+machine and:
+
+- `npm install`
+- `npm run build`
+- `npm run start`
 
 ### Testing
 
