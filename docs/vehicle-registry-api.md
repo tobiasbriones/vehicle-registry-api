@@ -132,55 +132,70 @@ Registers a new vehicle in the database.
     - **Schema**:
       ```json
       {
-        "errors": [
-          {
-            "path": "string",
-            "message": "string"
-          }
-        ]
+        "error": {
+          "type":"ValidationError",
+          "msg": [
+            {
+              "path": "string",
+              "message": "string"
+            }
+          ]
+        }
       }
       ```
     - **Examples**:
         - **Non-blank validation error**:
           ```json
           {
-            "errors": [
-              {
-                "path": "brand",
-                "message": "String must contain at least 1 character(s)"
-              }
-            ]
+            "error": {
+              "type":"ValidationError",
+              "msg": [
+                {
+                  "path": "brand",
+                  "message": "String must contain at least 1 character(s)"
+                }
+              ]
+            }
           }
           ```
         - **Maximum length validation error**:
           ```json
           {
-            "errors": [
-              {
-                "path": "number",
-                "message": "String must contain at most 20 character(s)"
-              }
-            ]
+            "error": {
+              "type":"ValidationError",
+              "msg": [
+                {
+                  "path": "number",
+                  "message": "String must contain at most 20 character(s)"
+                }
+              ]
+            }
           }
           ```
           ```json
           {
-            "errors": [
-              {
-                "path": "brand",
-                "message": "String must contain at most 100 character(s)"
-              }
-            ]
+            "error": {
+              "type":"ValidationError",
+              "msg": [
+                {
+                  "path": "brand",
+                  "message": "String must contain at most 100 character(s)"
+                }
+              ]
+            }
           }
           ```
           ```json
           {
-            "errors": [
-              {
-                "path": "model",
-                "message": "String must contain at most 100 character(s)"
-              }
-            ]
+            "error": {
+            "type":"ValidationError",
+              "msg": [
+                {
+                  "path": "model",
+                  "message": "String must contain at most 100 character(s)"
+                }
+              ]
+            }
           }
           ```
 

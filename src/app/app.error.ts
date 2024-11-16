@@ -9,11 +9,13 @@ import { StatusCodes } from "http-status-codes";
 export type ErrorType
     = "InternalError"
     | "DuplicateError"
+    | "ValidationError"
 
 export const errorToStatusCode = (error: ErrorType) => {
     const map: Record<ErrorType, StatusCodes> = {
         InternalError: StatusCodes.INTERNAL_SERVER_ERROR,
         DuplicateError: StatusCodes.CONFLICT,
+        ValidationError: StatusCodes.BAD_REQUEST,
     };
 
     return map[error];
@@ -44,6 +46,11 @@ export const duplicateError = (msg: string): AppError => ({
 
 export const rejectDuplicateError = (msg: string): Promise<never> =>
     Promise.reject(duplicateError(msg));
+
+export const validationError = (msg: string): AppError => ({
+    type: "ValidationError",
+    msg,
+});
 
 export type HttpError = {
     statusCode: number,
