@@ -33,6 +33,16 @@ describe("Vehicle Registration Schema", () => {
         expect(() => vehicleRegistrationSchema.parse(validData)).not.toThrow();
     });
 
+    it("should fail if 'number' is blank", () => {
+        const invalidData = {
+            number: "  ", // blank
+            brand: "Toyota",
+            model: "Corolla",
+        };
+        expect(() => vehicleRegistrationSchema.parse(invalidData))
+            .toThrow();
+    });
+
     it("should fail if 'number' exceeds 20 characters", () => {
         const invalidData = {
             number: "123456789012345678901", // 21 characters
@@ -85,6 +95,15 @@ describe("Vehicle Update Schema", () => {
         };
 
         expect(() => vehicleUpdateSchema.parse(validData)).not.toThrow();
+    });
+
+    it("should fail if 'brand' is blank", () => {
+        const invalidData = {
+            brand: "  ", // blank
+            model: "Corolla",
+        };
+        expect(() => vehicleUpdateSchema.parse(invalidData))
+            .toThrow();
     });
 
     it("should fail if 'brand' exceeds 100 characters", () => {
