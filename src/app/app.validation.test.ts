@@ -4,6 +4,7 @@
 
 import express from "express";
 import { StatusCodes } from "http-status-codes";
+import { objToString } from "@/utils";
 import request from "supertest";
 import { z } from "zod";
 import { validateBody } from "./app.validation";
@@ -31,11 +32,14 @@ describe("validateBody Middleware", () => {
 
         expect(response.status).toBe(StatusCodes.BAD_REQUEST);
         expect(response.body).toEqual({
-            errors: [
-                { path: "number", message: "Required" },
-                { path: "brand", message: "Required" },
-                { path: "model", message: "Required" },
-            ],
+            error: {
+                type: "ValidationError",
+                msg: objToString([
+                    { path: "number", message: "Required" },
+                    { path: "brand", message: "Required" },
+                    { path: "model", message: "Required" },
+                ]),
+            },
         });
     });
 
