@@ -13,8 +13,8 @@ Backend API for a vehicle registration web app that allows entrance and leave.
 The Node + Express.js + TypeScript application provides an API for vehicle
 operations.
 
-The following scripts are common to the project, while the next sections provide
-particular scripts for development and production.
+The following scripts are **common** to the project, while the next sections
+provide particular scripts for development and production.
 
 | Command         | Description                                                  |
 |-----------------|--------------------------------------------------------------|
