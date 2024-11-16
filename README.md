@@ -22,6 +22,9 @@ provide particular scripts for development and production.
 | `npm run lint`  | Executes ESLint to check code quality using static analysis. |
 | `npm run clean` | Removes generated project files.                             |
 
+To completely set up the application either in production or locally, ensure to
+set your [environment variables](#environment-variables) accordingly.
+
 ### Development
 
 | Command             | Description                  |
