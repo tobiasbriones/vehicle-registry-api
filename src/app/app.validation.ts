@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { objToString } from "@/utils";
+import { validationError } from "@app/app.error";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ZodSchema } from "zod";
@@ -19,8 +21,9 @@ export const validateBody = <T extends ZodSchema>(schema: T) => {
                 path: err.path.join("."),
                 message: err.message,
             }));
+            const error = validationError(objToString(errors));
 
-            res.status(StatusCodes.BAD_REQUEST).json({ errors });
+            res.status(StatusCodes.BAD_REQUEST).json({ error });
             return;
         }
 

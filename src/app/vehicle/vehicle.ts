@@ -19,12 +19,12 @@ export type Vehicle = {
 }
 
 export const vehicleRegistrationSchema = z.object({
-    number: z.string().max(20),
-    brand: z.string().max(100),
-    model: z.string().max(100),
+    number: z.string().max(20).trim().min(1),
+    brand: z.string().max(100).trim().min(1),
+    model: z.string().max(100).trim().min(1),
 }).strict();
 
 export const vehicleUpdateSchema = z.object({
-    brand: z.string().max(100),
-    model: z.string().max(100),
+    brand: z.string().max(100).trim().min(1),
+    model: z.string().max(100).trim().min(1),
 }).strict();

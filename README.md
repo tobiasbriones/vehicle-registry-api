@@ -13,8 +13,30 @@ Backend API for a vehicle registration web app that allows entrance and leave.
 The Node + Express.js + TypeScript application provides an API for vehicle
 operations.
 
-The following scripts are common to the project, while the next sections provide
-particular scripts for development and production.
+### Environment Variables
+
+The app utilizes environment variables to set production values.
+
+I leave the following template to speed up your environment setup by copying it
+to your local file or environment, so you only need to add your values.
+
+```
+PORT=3000
+ENV_MODE=development
+DB_USER=
+DB_HOST=localhost
+DB_NAME=local_vehicle_registry
+DB_PASSWORD=
+DB_PORT=5432
+```
+
+The complete environment variables documentation is at
+the [environment-variables](docs/environment-variables.md) page.
+
+### Project Scripts
+
+The following scripts are **common** to the project, while the next sections
+provide particular scripts for development and production.
 
 | Command         | Description                                                  |
 |-----------------|--------------------------------------------------------------|
@@ -22,13 +44,16 @@ particular scripts for development and production.
 | `npm run lint`  | Executes ESLint to check code quality using static analysis. |
 | `npm run clean` | Removes generated project files.                             |
 
-### Development
+To completely set up the application either in production or locally, ensure to
+set your [environment variables](#environment-variables) accordingly.
+
+#### Development
 
 | Command             | Description                  |
 |---------------------|------------------------------|
 | `npm run start:dev` | Runs the development server. |
 
-### Deployment
+#### Deployment
 
 | Command         | Description                                                |
 |-----------------|------------------------------------------------------------|
@@ -45,7 +70,7 @@ machine and:
 - `npm run build`
 - `npm run start`
 
-### Testing
+#### Testing
 
 The application specifies unit tests to enhance its reliability and
 documentation.
@@ -68,37 +93,8 @@ documentation.
 | `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
 | `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
 
-The complete API documentation is
-at the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
-
-## Environment Variables
-
-The app utilizes environment variables to set production values.
-
-Ensure *not to commit any environment variable* files (e.g., `.env`, `.dev.env`,
-etc.) to the repository, even if they are for testing purposes, or they (still)
-don't contain any sensitive information.
-
-The production file is `.env` and must be at the root of the project when
-deploying. You should also consider adding environment variables directly into
-your deployment environment (e.g. Render, AWS, etc.) instead of using a
-`.env` file.
-
-### Setting Variables
-
-The following variables work for production and development modes. Ensure to set
-the proper values in a `.env` file (recommended for development) or directly
-into your production environment.
-
-| Variable      | Description                                                                              | Value              | Dev Value                |
-|---------------|------------------------------------------------------------------------------------------|--------------------|--------------------------|
-| `PORT`        | Port on which the application listens for incoming connections.                          | `3000`             | `3000`                   |
-| `ENV_MODE`    | Mode of the environment the application runs on (development, staging, production, etc). | `production`       | `development`            |
-| `DB_USER`     | Username for the PostgreSQL database connection.                                         | `${ db_user }`     | `tobi`                   |
-| `DB_HOST`     | Hostname of the PostgreSQL database server.                                              | `${ db_hostname }` | `localhost`              |
-| `DB_NAME`     | Name of the PostgreSQL database to connect to.                                           | `vehicle_registry` | `local_vehicle_registry` |
-| `DB_PASSWORD` | Password for the PostgreSQL user.                                                        | `${ db_password }` | `${ dev_db_password }`   |
-| `DB_PORT`     | Port on which the PostgreSQL database server is running.                                 | `5432`             | `5432`                   |
+The complete API documentation is at
+the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
 
 ## Testing HTTP Request
 

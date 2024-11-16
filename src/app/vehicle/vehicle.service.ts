@@ -89,6 +89,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         const query = `
             SELECT number, brand, model
             FROM vehicle
+            ORDER BY id DESC
             LIMIT $1 OFFSET $2;
         `;
 

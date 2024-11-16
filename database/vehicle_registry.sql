@@ -5,8 +5,8 @@
 -- Vehicle
 CREATE TABLE vehicle
 (
-    id     SERIAL PRIMARY KEY,
-    number VARCHAR(20)  NOT NULL UNIQUE,
-    brand  VARCHAR(100) NOT NULL,
-    model  VARCHAR(100) NOT NULL
+    id     INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    number VARCHAR(20)  NOT NULL UNIQUE CHECK (TRIM(brand) <> ''),
+    brand  VARCHAR(100) NOT NULL CHECK (TRIM(brand) <> ''),
+    model  VARCHAR(100) NOT NULL CHECK (TRIM(brand) <> '')
 );
