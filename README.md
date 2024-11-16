@@ -71,8 +71,8 @@ documentation.
 | `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
 | `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
 
-The complete API documentation is
-at the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
+The complete API documentation is at
+the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
 
 ## Environment Variables
 
@@ -105,7 +105,7 @@ into your production environment.
 
 ### Environment Variables Template
 
-I leave the following template to speed up your environment by copying it to 
+I leave the following template to speed up your environment by copying it to
 your local file or environment, so you only need to add your values.
 
 ```
