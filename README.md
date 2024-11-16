@@ -103,6 +103,21 @@ into your production environment.
 | `DB_PASSWORD` | Password for the PostgreSQL user.                                                        | `${ db_password }` | `${ dev_db_password }`   |
 | `DB_PORT`     | Port on which the PostgreSQL database server is running.                                 | `5432`             | `5432`                   |
 
+### Environment Variables Template
+
+I leave the following template to speed up your environment by copying it to 
+your local file or environment, so you only need to add your values.
+
+```
+PORT=3000
+ENV_MODE=development
+DB_USER=
+DB_HOST=localhost
+DB_NAME=local_vehicle_registry
+DB_PASSWORD=
+DB_PORT=5432
+```
+
 ## Testing HTTP Request
 
 The [./http](http) project contains `http` files with requests you can run from
