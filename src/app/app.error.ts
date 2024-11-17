@@ -84,12 +84,12 @@ export const respondHttpError = (res: Response) => (error: unknown) => {
 
         res
             .status(errorToStatusCode(type))
-            .json({ error: error });
+            .json(error);
     }
     else {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ error: JSON.parse(valToString(error)) });
+            .json(error);
     }
 };
 
