@@ -3,7 +3,7 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { objToString } from "@/utils";
-import { Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export type ErrorType
@@ -76,6 +76,18 @@ export const respondHttpError = (res: Response) => (error: unknown) => {
             .json({ error: JSON.parse(objToString(error)) });
     }
 };
+
+export function errorHandler(
+    err: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    const handleError = respondHttpError(res);
+
+    handleError(err);
+    next(err);
+}
 
 const isNonNullObject = (obj: unknown) =>
     typeof obj === "object" && obj !== null;

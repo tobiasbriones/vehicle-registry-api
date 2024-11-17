@@ -4,6 +4,7 @@
 
 import express from "express";
 import { StatusCodes } from "http-status-codes";
+import { createMocks } from "node-mocks-http";
 import request from "supertest";
 import { newVehicleController } from "./vehicle.controller";
 
@@ -50,12 +51,21 @@ describe("VehicleController", () => {
             brand: "Toyota",
             model: "Camry",
         };
-        mockVehicleService.create.mockRejectedValue(new Error("Creation error"));
+        const { req, res } = createMocks({ body: newVehicle });
+        const mockError = new Error("Creation error");
+        const next = jest.fn();
 
-        const response = await request(app).post("/vehicles").send(newVehicle);
+        mockVehicleService.create.mockRejectedValue(mockError);
 
-        expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-        expect(response.body).toEqual({ error: { message: "Creation error" } });
+        // Mock `res.status` and `res.json` to be jest mock functions
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+
+        await vehicleController.create(req, res, next);
+
+        expect(next).toHaveBeenCalledWith(mockError);
+        expect(res.status).not.toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
     });
 
     test("GET /vehicles/:number - Success", async () => {

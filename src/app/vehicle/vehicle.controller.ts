@@ -2,31 +2,33 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { respondHttpError } from "@app/app.error";
 import { Vehicle, vehicleUpdateSchema } from "@app/vehicle/vehicle";
 import { VehicleService } from "@app/vehicle/vehicle.service";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export type VehicleController = {
-    create: (req: Request, res: Response) => Promise<void>,
-    read: (req: Request, res: Response) => Promise<void>,
-    readAll: (req: Request, res: Response) => Promise<void>,
-    update: (req: Request, res: Response) => Promise<void>,
-    delete: (req: Request, res: Response) => Promise<void>,
+    create: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+    read: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+    readAll: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+    update: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+    delete: (req: Request, res: Response, next: NextFunction) => Promise<void>,
 }
 
 export const newVehicleController = (service: VehicleService): VehicleController => ({
-    async create(req, res) {
+    async create(req, res, next) {
         const vehicle = req.body as Vehicle;
+
+        const respond = (vehicle: Vehicle) => res
+            .status(StatusCodes.CREATED)
+            .json(vehicle);
 
         service
             .create(vehicle)
-            .then(vehicle => res.status(StatusCodes.CREATED).json(vehicle))
-            .catch(respondHttpError(res));
+            .then(respond, next)
     },
 
-    async read(req, res) {
+    async read(req, res, next) {
         const { number } = req.params;
 
         const notFound = () => res
@@ -40,11 +42,10 @@ export const newVehicleController = (service: VehicleService): VehicleController
 
         service
             .read(number)
-            .then(respond)
-            .catch(respondHttpError(res));
+            .then(respond, next);
     },
 
-    async readAll(req, res) {
+    async readAll(req, res, next) {
         const queryIntParam = (key: string, def: number) =>
             parseInt(req.query[key] as string) || def;
 
@@ -53,13 +54,16 @@ export const newVehicleController = (service: VehicleService): VehicleController
         const limit = Math.max(queryIntParam("limit", defLimit), 0);
         const page = Math.max(queryIntParam("page", defPage), 1);
 
+        const respond = (vehicles: Vehicle[]) => res
+            .status(StatusCodes.OK)
+            .json(vehicles);
+
         service
             .readAll(limit, page)
-            .then(vehicles => res.status(StatusCodes.OK).json(vehicles))
-            .catch(respondHttpError(res));
+            .then(respond, next);
     },
 
-    async update(req, res) {
+    async update(req, res, next) {
         const { number } = req.params;
         const vehicleData = vehicleUpdateSchema.parse(req.body);
         const vehicle: Vehicle = { number, ...vehicleData };
@@ -72,11 +76,10 @@ export const newVehicleController = (service: VehicleService): VehicleController
 
         service
             .update(vehicle)
-            .then(respond)
-            .catch(respondHttpError(res));
+            .then(respond, next);
     },
 
-    async delete(req, res) {
+    async delete(req, res, next) {
         const { number } = req.params;
 
         const respond = (deletedVehicle: boolean) =>
@@ -90,7 +93,6 @@ export const newVehicleController = (service: VehicleService): VehicleController
 
         service
             .delete(number)
-            .then(respond)
-            .catch(respondHttpError(res));
+            .then(respond, next);
     },
 });
