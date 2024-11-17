@@ -9,6 +9,12 @@ describe("objToString", () => {
     // multi-line strings in TS (this is straightforward in Kotlin but not
     // in TS).
 
+    test("keeps a string value unchanged", () => {
+        const msg = "Information message string.";
+
+        expect(objToString(msg)).toEqual(msg);
+    });
+
     test("converts a simple object to a formatted string", () => {
         const obj = { a: 1, b: "text", c: [ 1, 2, 3 ] };
         const expectedOutput = JSON.stringify(obj, null, 4);
@@ -41,6 +47,9 @@ describe("objToString", () => {
 
     test("handles null and undefined", () => {
         expect(objToString(null)).toBe("null");
+        expect(objToString(null)).toBe("null");
+
+        expect(objToString(undefined)).toBe("null");
         expect(objToString(undefined)).toBe("null");
     });
 

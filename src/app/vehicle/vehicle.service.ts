@@ -3,8 +3,11 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { objToString } from "@/utils";
-import { rejectDuplicateError, rejectInternalError } from "@app/app.error";
-import { withErrorMessage } from "@log/log";
+import {
+    rejectDuplicateError,
+    rejectInternalError,
+} from "@app/app.error";
+import { withError } from "@log/log";
 import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
 
@@ -42,7 +45,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         };
 
         const handleError = (reason: unknown) =>
-            withErrorMessage(`Fail to create vehicle ${ objToString(vehicle) }.`)
+            withError(`Fail to create vehicle ${ objToString(vehicle) }.`)
                 .logInternalReason(reason)
                 .catch(rejectReason(reason));
 
@@ -57,7 +60,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         }
         else {
             result =
-                withErrorMessage("Internal error. Fail to add record.")
+                withError("Internal error. Fail to add record.")
                     .logInternalReason(`Row count ${ queryResult.rowCount } is not 1`)
                     .catch(rejectInternalError);
         }
@@ -73,7 +76,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         `;
 
         const handleError = (reason: unknown) =>
-            withErrorMessage(`Fail to read vehicle with number ${ number }.`)
+            withError(`Fail to read vehicle with number ${ number }.`)
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
@@ -94,7 +97,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         `;
 
         const handleError = (reason: unknown) =>
-            withErrorMessage(`Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`)
+            withError(`Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`)
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 
@@ -115,7 +118,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         `;
 
         const handleError = async (reason: unknown) => {
-            return withErrorMessage(
+            return withError(
                 `Fail to update vehicle ${ objToString(vehicle) } with number ${ number }.`,
             ).logInternalReason(reason)
              .catch(rejectInternalError);
@@ -135,7 +138,7 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
         `;
 
         const handleError = (reason: unknown) =>
-            withErrorMessage(`Fail to delete vehicle with number ${ number }.`)
+            withError(`Fail to delete vehicle with number ${ number }.`)
                 .logInternalReason(reason)
                 .catch(rejectInternalError);
 

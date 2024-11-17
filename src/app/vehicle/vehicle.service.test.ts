@@ -63,12 +63,16 @@ describe("VehicleService create method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to create vehicle ${ objToString(vehicle) }.\n`,
+                info: `Fail to create vehicle ${ objToString(vehicle) }.\n`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
                 expect.stringContaining("Fail to create vehicle"),
+            );
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
                 expect.stringContaining("Reason:"),
                 mockError,
             );
@@ -93,7 +97,7 @@ describe("VehicleService create method", () => {
                 .rejects
                 .toMatchObject({
                     type: "InternalError",
-                    msg: "Internal error. Fail to add record.",
+                    info: "Internal error. Fail to add record.",
                 });
 
             expect(console.error)
@@ -101,6 +105,10 @@ describe("VehicleService create method", () => {
                     expect.stringContaining(
                         "Internal error. Fail to add record."
                     ),
+                );
+
+            expect(console.error)
+                .toHaveBeenCalledWith(
                     expect.stringContaining("Reason:"),
                     expect.stringContaining("Row count 0 is not 1"),
                 );
@@ -174,12 +182,16 @@ describe("VehicleService read method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to read vehicle with number ${ mockNumber }.`,
+                info: `Fail to read vehicle with number ${ mockNumber }.`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
                 expect.stringContaining(`Fail to read vehicle with number ${ mockNumber }.`),
+            );
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
                 "Reason:",
                 String(mockError),
             );
@@ -236,12 +248,16 @@ describe("Vehicle Service readAll method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`,
+                info: `Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
                 expect.stringContaining(`Failed to retrieve vehicles for page ${ page } with limit ${ limit }.`),
+            );
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
                 "Reason:",
                 String(mockError),
             );
@@ -327,12 +343,16 @@ describe("VehicleService update method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to update vehicle ${ objToString(vehicle) } with number ${ mockNumber }.`,
+                info: `Fail to update vehicle ${ objToString(vehicle) } with number ${ mockNumber }.`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
                 expect.stringContaining(`Fail to update vehicle`),
+            );
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
                 "Reason:",
                 String(mockError),
             );
@@ -401,12 +421,16 @@ describe("VehicleService delete method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: `Fail to delete vehicle with number ${ mockNumber }.`,
+                info: `Fail to delete vehicle with number ${ mockNumber }.`,
             });
 
         expect(console.error)
             .toHaveBeenCalledWith(
                 expect.stringContaining(`Fail to delete vehicle with number ${ mockNumber }.`),
+            );
+
+        expect(console.error)
+            .toHaveBeenCalledWith(
                 "Reason:",
                 String(mockError),
             );

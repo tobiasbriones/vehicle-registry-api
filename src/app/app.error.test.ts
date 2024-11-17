@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { withErrorMessage } from "@log/log";
+import { withError } from "@log/log";
 import { Response } from "express";
 import {
     duplicateError,
@@ -25,30 +25,30 @@ describe("Error Handling Module", () => {
         it(
             "should create an error object with the given type and message",
             () => {
-                const errorType = "InternalError" as const;
-                const msg = "An internal error occurred.";
-                const result = error(errorType, msg);
+                const type = "InternalError";
+                const info = "An internal error occurred.";
+                const result = error(type, info);
 
-                expect(result).toEqual({ type: errorType, msg });
+                expect(result).toEqual({ type, info });
             },
         );
     });
 
     describe("internalError function", () => {
         it("should create an InternalError with the given message", () => {
-            const msg = "Internal server error.";
-            const result = internalError(msg);
+            const info = "Internal server error.";
+            const result = internalError(info);
 
-            expect(result).toEqual({ type: "InternalError", msg });
+            expect(result).toEqual({ type: "InternalError", info });
         });
     });
 
     describe("duplicateError function", () => {
         it("should create a DuplicateError with the given message", () => {
-            const msg = "Item already exists.";
-            const result = duplicateError(msg);
+            const info = "Item already exists.";
+            const result = duplicateError(info);
 
-            expect(result).toEqual({ type: "DuplicateError", msg });
+            expect(result).toEqual({ type: "DuplicateError", info });
         });
 
         it("should return the proper status code of a DuplicateError", () => {
@@ -66,11 +66,11 @@ describe("Error Handling Module", () => {
         it(
             "should return a rejected promise with an InternalError",
             async () => {
-                const msg = "This is an internal error.";
+                const info = "This is an internal error.";
 
-                await expect(rejectInternalError(msg))
+                await expect(rejectInternalError(info))
                     .rejects
-                    .toEqual(internalError(msg));
+                    .toEqual(internalError(info));
             },
         );
     });
@@ -84,7 +84,7 @@ describe("Error Handling Module", () => {
 
                 expect(result).toEqual({
                     statusCode: 500,
-                    msg: "Internal error occurred.",
+                    info: "Internal error occurred.",
                 });
             },
         );
@@ -104,7 +104,7 @@ describe("internalError", () => {
     });
 
     it("should forward the user error message", async () => {
-        const logger = withErrorMessage(userMessage);
+        const logger = withError(userMessage);
         const handledError = logger
             .logInternalReason(mockReason)
             .catch(rejectInternalError);
@@ -113,11 +113,14 @@ describe("internalError", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                msg: userMessage,
+                info: userMessage,
             });
 
+        // Log the user error info
+        expect(console.error).toHaveBeenCalledWith(userMessage);
+
+        // Log the private error reason that must stay in the server
         expect(console.error).toHaveBeenCalledWith(
-            userMessage,
             "Reason:",
             mockReason.toString(),
         );
@@ -143,7 +146,7 @@ describe("respondHttpError", () => {
             .toHaveBeenCalledWith(500);
 
         expect(res.json)
-            .toHaveBeenCalledWith({ error: error.msg });
+            .toHaveBeenCalledWith({ error: error.info });
     });
 
     it("should handle unknown errors gracefully", () => {

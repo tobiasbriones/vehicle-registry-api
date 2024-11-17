@@ -34,7 +34,7 @@ describe("validateBody Middleware", () => {
         expect(response.body).toEqual({
             error: {
                 type: "ValidationError",
-                msg: objToString([
+                info: objToString([
                     { path: "number", message: "Required" },
                     { path: "brand", message: "Required" },
                     { path: "model", message: "Required" },

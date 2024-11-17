@@ -21,54 +21,56 @@ export const errorToStatusCode = (error: ErrorType) => {
     return map[error];
 };
 
+export type ErrorInfo = string | object;
+
 export type AppError = {
     type: ErrorType,
-    msg: string,
+    info: ErrorInfo,
 }
 
-export const error = (type: ErrorType, msg: string): AppError => ({
+export const error = (type: ErrorType, info: ErrorInfo): AppError => ({
     type,
-    msg,
+    info,
 });
 
-export const internalError = (msg: string): AppError => ({
+export const internalError = (info: ErrorInfo): AppError => ({
     type: "InternalError",
-    msg,
+    info,
 });
 
-export const rejectInternalError = (msg: string): Promise<never> =>
-    Promise.reject(internalError(msg));
+export const rejectInternalError = (info: ErrorInfo): Promise<never> =>
+    Promise.reject(internalError(info));
 
-export const duplicateError = (msg: string): AppError => ({
+export const duplicateError = (info: ErrorInfo): AppError => ({
     type: "DuplicateError",
-    msg,
+    info,
 });
 
-export const rejectDuplicateError = (msg: string): Promise<never> =>
-    Promise.reject(duplicateError(msg));
+export const rejectDuplicateError = (infos: ErrorInfo): Promise<never> =>
+    Promise.reject(duplicateError(infos));
 
-export const validationError = (msg: string): AppError => ({
+export const validationError = (info: ErrorInfo): AppError => ({
     type: "ValidationError",
-    msg,
+    info,
 });
 
 export type HttpError = {
     statusCode: number,
-    msg: string,
+    info: ErrorInfo,
 }
 
-export const errorToHttp = ({ type, msg }: AppError): HttpError => ({
+export const errorToHttp = ({ type, info }: AppError): HttpError => ({
     statusCode: errorToStatusCode(type),
-    msg,
+    info,
 });
 
 export const respondHttpError = (res: Response) => (error: unknown) => {
     if (isAppError(error)) {
-        const { type, msg } = error;
+        const { type, info } = error;
 
         res
             .status(errorToStatusCode(type))
-            .json({ error: msg });
+            .json({ error: info });
     }
     else {
         res
@@ -95,4 +97,4 @@ const isNonNullObject = (obj: unknown) =>
 const isAppError = (error: unknown): error is AppError =>
     isNonNullObject(error) &&
     "type" in error &&
-    "msg" in error;
+    "info" in error;
