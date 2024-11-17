@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { objToString } from "@/utils";
+import { valToString } from "@/utils";
 import { ErrorInfo } from "@app/app.error";
 
 /**
@@ -18,7 +18,7 @@ export const withError = (info: ErrorInfo) => ({
      * @param reason Private server error
      */
     logInternalReason(reason: unknown): Promise<never> {
-        console.error(objToString(info));
+        console.error(valToString(info));
         console.error("Reason:", String(reason));
         return Promise.reject(info);
     },

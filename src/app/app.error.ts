@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { objToString } from "@/utils";
+import { valToString } from "@/utils";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -75,7 +75,7 @@ export const respondHttpError = (res: Response) => (error: unknown) => {
     else {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ error: JSON.parse(objToString(error)) });
+            .json({ error: JSON.parse(valToString(error)) });
     }
 };
 

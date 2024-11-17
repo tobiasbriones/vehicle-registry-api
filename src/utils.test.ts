@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { objToString } from "./utils";
+import { objToString, valToString } from "./utils";
 
 describe("objToString", () => {
     // Use `JSON.stringify(obj, null, 4)` as the spec to avoid writing
@@ -12,7 +12,7 @@ describe("objToString", () => {
     test("keeps a string value unchanged", () => {
         const msg = "Information message string.";
 
-        expect(objToString(msg)).toEqual(msg);
+        expect(valToString(msg)).toEqual(msg);
     });
 
     test("converts a simple object to a formatted string", () => {
