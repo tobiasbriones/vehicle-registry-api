@@ -266,13 +266,15 @@ Fetches details of a specific vehicle by its unique vehicle number.
     - **Schema**:
       ```json
       {
+        "type": "string",
         "error": "string"
       }
       ```
     - **Example**:
       ```json
       {
-        "error": "Vehicle number not found: VIN-example"
+        "type": "NotFoundError",
+        "info": "Vehicle number not found: VIN-example"
       }
       ```
 

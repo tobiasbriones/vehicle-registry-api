@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { notFoundError } from "@app/app.error";
 import { Vehicle, vehicleUpdateSchema } from "@app/vehicle/vehicle";
 import { VehicleService } from "@app/vehicle/vehicle.service";
 import { NextFunction, Request, Response } from "express";
@@ -31,14 +32,10 @@ export const newVehicleController = (service: VehicleService): VehicleController
     async read(req, res, next) {
         const { number } = req.params;
 
-        const notFound = () => res
-            .status(StatusCodes.NOT_FOUND)
-            .json({ error: `Vehicle number not found: ${ number }` });
-
         const respond = (vehicle: Vehicle | null) =>
             vehicle !== null
             ? res.status(StatusCodes.OK).json(vehicle)
-            : notFound();
+            : next(notFoundError(`Vehicle number not found: ${ number }`));
 
         service
             .read(number)
@@ -71,8 +68,7 @@ export const newVehicleController = (service: VehicleService): VehicleController
         const respond = (vehicle: Vehicle | null) =>
             vehicle !== null
             ? res.status(StatusCodes.OK).json(vehicle)
-            : res.status(StatusCodes.NOT_FOUND)
-                 .json({ error: `Vehicle not found: ${ number }` });
+            : next(notFoundError(`Vehicle not found: ${ number }`));
 
         service
             .update(vehicle)
@@ -88,8 +84,7 @@ export const newVehicleController = (service: VehicleService): VehicleController
                  .json({
                      message: `Vehicle with number ${ number } deleted successfully.`,
                  })
-            : res.status(StatusCodes.NOT_FOUND)
-                 .json({ error: `Vehicle not found: ${number}` });
+            : next(notFoundError(`Vehicle not found: ${number}`));
 
         service
             .delete(number)

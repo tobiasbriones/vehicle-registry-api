@@ -10,12 +10,14 @@ export type ErrorType
     = "InternalError"
     | "DuplicateError"
     | "ValidationError"
+    | "NotFoundError"
 
 export const errorToStatusCode = (error: ErrorType) => {
     const map: Record<ErrorType, StatusCodes> = {
         InternalError: StatusCodes.INTERNAL_SERVER_ERROR,
         DuplicateError: StatusCodes.CONFLICT,
         ValidationError: StatusCodes.BAD_REQUEST,
+        NotFoundError: StatusCodes.NOT_FOUND,
     };
 
     return map[error];
@@ -51,6 +53,11 @@ export const rejectDuplicateError = (infos: ErrorInfo): Promise<never> =>
 
 export const validationError = (info: ErrorInfo): AppError => ({
     type: "ValidationError",
+    info,
+});
+
+export const notFoundError = (info: ErrorInfo): AppError => ({
+    type: "NotFoundError",
     info,
 });
 
