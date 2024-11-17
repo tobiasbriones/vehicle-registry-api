@@ -101,7 +101,7 @@ export const respondHttpError = (res: Response) => (error: unknown) => {
 };
 
 export function errorHandler(
-    err: Error,
+    err: AppError,
     req: Request,
     res: Response,
     next: NextFunction,
