@@ -23,7 +23,7 @@ export const validateBody = <T extends ZodSchema>(schema: T) => {
             }));
             const error = validationError(objToString(errors));
 
-            res.status(StatusCodes.BAD_REQUEST).json({ error });
+            res.status(StatusCodes.BAD_REQUEST).json(error);
             return;
         }
 

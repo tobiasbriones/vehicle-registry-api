@@ -2,80 +2,115 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { objToString } from "@/utils";
-import { Response } from "express";
+import { valToString } from "@/utils";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export type ErrorType
     = "InternalError"
     | "DuplicateError"
     | "ValidationError"
+    | "NotFoundError"
 
 export const errorToStatusCode = (error: ErrorType) => {
     const map: Record<ErrorType, StatusCodes> = {
         InternalError: StatusCodes.INTERNAL_SERVER_ERROR,
         DuplicateError: StatusCodes.CONFLICT,
         ValidationError: StatusCodes.BAD_REQUEST,
+        NotFoundError: StatusCodes.NOT_FOUND,
     };
 
     return map[error];
 };
 
+export type ErrorInfo = string | object;
+
 export type AppError = {
     type: ErrorType,
-    msg: string,
+    info: ErrorInfo,
 }
 
-export const error = (type: ErrorType, msg: string): AppError => ({
+export const error = (type: ErrorType, info: ErrorInfo): AppError => ({
     type,
-    msg,
+    info,
 });
 
-export const internalError = (msg: string): AppError => ({
+export const internalError = (info: ErrorInfo): AppError => ({
     type: "InternalError",
-    msg,
+    info,
 });
 
-export const rejectInternalError = (msg: string): Promise<never> =>
-    Promise.reject(internalError(msg));
+export const rejectInternalError = (info: ErrorInfo): Promise<never> =>
+    Promise.reject(internalError(info));
 
-export const duplicateError = (msg: string): AppError => ({
+export const duplicateError = (info: ErrorInfo): AppError => ({
     type: "DuplicateError",
-    msg,
+    info,
 });
 
-export const rejectDuplicateError = (msg: string): Promise<never> =>
-    Promise.reject(duplicateError(msg));
+export const rejectDuplicateError = (infos: ErrorInfo): Promise<never> =>
+    Promise.reject(duplicateError(infos));
 
-export const validationError = (msg: string): AppError => ({
+export const validationError = (info: ErrorInfo): AppError => ({
     type: "ValidationError",
-    msg,
+    info,
 });
+
+export const notFoundError = (info: ErrorInfo): AppError => ({
+    type: "NotFoundError",
+    info,
+});
+
+export type MessageOf<T> = {
+    message: string,
+    target: T,
+}
+
+export const messageOf = <T>(
+    message: string,
+    target: T,
+): MessageOf<T> => ({ message, target });
+
+export const messageOfToString = <T>(
+    { message, target }: MessageOf<T>,
+) => `${ message }: ${ valToString(target) }.`;
 
 export type HttpError = {
     statusCode: number,
-    msg: string,
+    info: ErrorInfo,
 }
 
-export const errorToHttp = ({ type, msg }: AppError): HttpError => ({
+export const errorToHttp = ({ type, info }: AppError): HttpError => ({
     statusCode: errorToStatusCode(type),
-    msg,
+    info,
 });
 
 export const respondHttpError = (res: Response) => (error: unknown) => {
     if (isAppError(error)) {
-        const { type, msg } = error;
+        const { type } = error;
 
         res
             .status(errorToStatusCode(type))
-            .json({ error: msg });
+            .json(error);
     }
     else {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ error: JSON.parse(objToString(error)) });
+            .json(error);
     }
 };
+
+export function errorHandler(
+    err: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    const handleError = respondHttpError(res);
+
+    handleError(err);
+    next(err);
+}
 
 const isNonNullObject = (obj: unknown) =>
     typeof obj === "object" && obj !== null;
@@ -83,4 +118,4 @@ const isNonNullObject = (obj: unknown) =>
 const isAppError = (error: unknown): error is AppError =>
     isNonNullObject(error) &&
     "type" in error &&
-    "msg" in error;
+    "info" in error;

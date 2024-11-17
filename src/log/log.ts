@@ -2,20 +2,24 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { valToString } from "@/utils";
+import { ErrorInfo } from "@app/app.error";
+
 /**
  * Creates a logger with a given public error message.
  *
- * @param {string} msg User friendly error message to forward in the logs
+ * @param info User friendly error message to forward in the logs
  */
-export const withErrorMessage = (msg: string) => ({
+export const withError = (info: ErrorInfo) => ({
     /**
-     * Logs an internal error given the "public" `msg` and the internal
+     * Logs an internal error given the "public" `info` and the internal
      * `reason` that should stay private in the server logs.
      *
      * @param reason Private server error
      */
     logInternalReason(reason: unknown): Promise<never> {
-        console.error(msg, "Reason:", String(reason));
-        return Promise.reject(msg);
+        console.error(valToString(info));
+        console.error("Reason:", String(reason));
+        return Promise.reject(info);
     },
 });

@@ -109,22 +109,53 @@ Registers a new vehicle in the database.
       }
       ```
 
-- **409 Conflict**
-    - **Description**: A vehicle with the same number already exists in the
-      system.
-    - **Content-Type**: `application/json`
-    - **Schema**:
-      ```json
-      {
-        "error": "string"
+### 409 Conflict
+
+- **Description**: A vehicle with the same number already exists in the system.
+- **Content-Type**: `application/json`
+- **Schema** (`DuplicateVehicleInfo`):
+  ```json
+  {
+    "type": "DuplicateError",
+    "info": {
+      "context": {
+        "message": "string",
+        "target": {
+          "number": "string",
+          "brand": "string",
+          "model": "string"
+        }
       }
-      ```
-    - **Example**:
-      ```json
-      {
-        "error": "A vehicle with this number already exists."
-      }
-      ```
+    },
+    "detail": "string"
+  }
+  ```
+- **Where**:
+
+```typescript
+  export type DuplicateVehicleInfo = {
+    context: MessageOf<Vehicle>,
+    detail: string,
+}
+```
+
+- **Example**:
+  ```json
+  {
+    "type": "DuplicateError",
+    "info": {
+      "context": {
+        "message": "Fail to create vehicle",
+        "target": {
+          "number": "VIN-example",
+          "brand": "Toyota",
+          "model": "Camry"
+        }
+      },
+      "detail": "A vehicle with this number already exists."
+    }
+  }
+  ```
 
 - **400 Bad Request**
     - **Description**: Validation error in the request body.
@@ -132,70 +163,60 @@ Registers a new vehicle in the database.
     - **Schema**:
       ```json
       {
-        "error": {
-          "type":"ValidationError",
-          "msg": [
-            {
-              "path": "string",
-              "message": "string"
-            }
-          ]
-        }
+        "type": "ValidationError",
+        "info": [
+          {
+            "path": "string",
+            "message": "string"
+          }
+        ]
       }
       ```
     - **Examples**:
         - **Non-blank validation error**:
           ```json
           {
-            "error": {
-              "type":"ValidationError",
-              "msg": [
-                {
-                  "path": "brand",
-                  "message": "String must contain at least 1 character(s)"
-                }
-              ]
-            }
+            "type": "ValidationError",
+            "msg": [
+              {
+                "path": "brand",
+                "message": "String must contain at least 1 character(s)"
+              }
+            ]
           }
           ```
         - **Maximum length validation error**:
           ```json
           {
-            "error": {
-              "type":"ValidationError",
-              "msg": [
-                {
-                  "path": "number",
-                  "message": "String must contain at most 20 character(s)"
-                }
-              ]
-            }
-          }
-          ```
-          ```json
-          {
-            "error": {
-              "type":"ValidationError",
-              "msg": [
-                {
-                  "path": "brand",
-                  "message": "String must contain at most 100 character(s)"
-                }
-              ]
-            }
-          }
-          ```
-          ```json
-          {
-            "error": {
             "type":"ValidationError",
-              "msg": [
-                {
-                  "path": "model",
-                  "message": "String must contain at most 100 character(s)"
-                }
-              ]
-            }
+            "msg": [
+              {
+                "path": "number",
+                "message": "String must contain at most 20 character(s)"
+              }
+            ]
+          }
+          ```
+          ```json
+          {
+            "type":"ValidationError",
+            "msg": [
+              {
+                "path": "brand",
+                "message": "String must contain at most 100 character(s)"
+              }
+            ]
+          }
+          ```
+          ```json
+          {
+            "type":"ValidationError",
+            "msg": [
+              {
+                "path": "model",
+                "message": "String must contain at most 100 character(s)"
+              }
+            ]
           }
           ```
 
@@ -245,13 +266,15 @@ Fetches details of a specific vehicle by its unique vehicle number.
     - **Schema**:
       ```json
       {
+        "type": "string",
         "error": "string"
       }
       ```
     - **Example**:
       ```json
       {
-        "error": "Vehicle number not found: VIN-example"
+        "type": "NotFoundError",
+        "info": "Vehicle number not found: VIN-example"
       }
       ```
 
