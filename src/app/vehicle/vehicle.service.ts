@@ -4,12 +4,23 @@
 
 import { objToString } from "@/utils";
 import {
+    MessageOf,
+    messageOf,
     rejectDuplicateError,
     rejectInternalError,
 } from "@app/app.error";
 import { withError } from "@log/log";
 import { Pool } from "pg";
 import { Vehicle } from "./vehicle";
+
+export type DuplicateVehicleInfo = {
+    context: MessageOf<Vehicle>,
+    detail: string,
+}
+
+export const duplicateVehicleInfo
+    = (context: MessageOf<Vehicle>, detail: string): DuplicateVehicleInfo =>
+    ({ context, detail });
 
 export type VehicleService = {
     create: (vehicle: Vehicle) => Promise<Vehicle>,
@@ -28,24 +39,28 @@ export const newVehicleService = (pool: Pool): VehicleService => ({
             RETURNING number, brand, model;
         `;
 
-        const rejectReason = (reason: unknown) => (msg: string) => {
+        const rejectReason = (reason: unknown) => (context: MessageOf<Vehicle>) => {
             const reasonStr = String(reason);
-            let detailMsg = "";
             let reject;
+            let info;
 
             if (reasonStr.includes(`duplicate key value violates unique constraint "vehicle_number_key"`)) {
-                detailMsg = "A vehicle with this number already exists.";
                 reject = rejectDuplicateError;
+                info = duplicateVehicleInfo(
+                    context,
+                    "A vehicle with this number already exists.",
+                );
             }
             else {
                 reject = rejectInternalError;
+                info = context;
             }
 
-            return reject(`${ msg }\n${ detailMsg }`);
+            return reject(info);
         };
 
         const handleError = (reason: unknown) =>
-            withError(`Fail to create vehicle ${ objToString(vehicle) }.`)
+            withError(messageOf("Fail to create vehicle", vehicle))
                 .logInternalReason(reason)
                 .catch(rejectReason(reason));
 

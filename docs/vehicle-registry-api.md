@@ -109,22 +109,50 @@ Registers a new vehicle in the database.
       }
       ```
 
-- **409 Conflict**
-    - **Description**: A vehicle with the same number already exists in the
-      system.
-    - **Content-Type**: `application/json`
-    - **Schema**:
-      ```json
-      {
-        "error": "string"
-      }
-      ```
-    - **Example**:
-      ```json
-      {
-        "error": "A vehicle with this number already exists."
-      }
-      ```
+### 409 Conflict
+
+- **Description**: A vehicle with the same number already exists in the system.
+- **Content-Type**: `application/json`
+- **Schema**:
+  ```json
+  {
+    "error": {
+      "context": {
+        "message": "string",
+        "target": {
+          "number": "string",
+          "brand": "string",
+          "model": "string"
+        }
+      },
+      "detail": "string"
+    }
+  }
+  ```
+- **Where**:
+```typescript
+  export type DuplicateVehicleInfo = {
+      context: MessageOf<Vehicle>,
+      detail: string,
+  }
+```
+
+- **Example**:
+  ```json
+    {
+      "error": {
+        "context": {
+            "message": "Fail to create vehicle",
+            "target": {
+                "number": "VIN-example",
+                "brand": "Toyota",
+                "model": "Camry"
+            }
+        },
+        "detail": "A vehicle with this number already exists."
+        }
+    }
+    ```
 
 - **400 Bad Request**
     - **Description**: Validation error in the request body.

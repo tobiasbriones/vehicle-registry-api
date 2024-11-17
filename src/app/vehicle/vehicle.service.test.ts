@@ -4,6 +4,7 @@
 
 import { objToString } from "@/utils";
 import { Pool, QueryResult } from "pg";
+import { messageOf } from "@app/app.error";
 import { Vehicle } from "./vehicle";
 import { newVehicleService, VehicleService } from "./vehicle.service";
 
@@ -63,7 +64,7 @@ describe("VehicleService create method", () => {
             .rejects
             .toMatchObject({
                 type: "InternalError",
-                info: `Fail to create vehicle ${ objToString(vehicle) }.\n`,
+                info: messageOf("Fail to create vehicle", vehicle),
             });
 
         expect(console.error)
