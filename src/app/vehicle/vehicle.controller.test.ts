@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { notFoundError } from "@app/app.error";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import { createMocks } from "node-mocks-http";
@@ -81,11 +82,22 @@ describe("VehicleController", () => {
     test("GET /vehicles/:number - Not Found", async () => {
         mockVehicleService.read.mockResolvedValue(null);
 
-        const response = await request(app).get("/vehicles/VIN-999");
+        const { req, res } = createMocks({ params: { number: "VIN-999" } });
+        const next = jest.fn();
 
-        expect(response.status).toBe(StatusCodes.NOT_FOUND);
-        expect(response.body)
-            .toEqual({ error: "Vehicle number not found: VIN-999" });
+        // Mock `res.status` and `res.json` to be jest mock functions
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+
+        await vehicleController.read(req, res, next);
+
+        expect(next)
+            .toHaveBeenCalledWith(
+                notFoundError(`Vehicle number not found: VIN-999`),
+            );
+
+        expect(res.status).not.toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
     });
 
     test("GET /vehicles - Success", async () => {
@@ -120,12 +132,25 @@ describe("VehicleController", () => {
     test("PUT /vehicles/:number - Not Found", async () => {
         mockVehicleService.update.mockResolvedValue(null);
 
-        const response = await request(app)
-            .put("/vehicles/VIN-999")
-            .send({ brand: "Toyota", model: "Corolla" });
+        const { req, res } = createMocks({
+            params: { number: "VIN-999" },
+            body: { brand: "Toyota", model: "Corolla" },
+        });
+        const next = jest.fn();
 
-        expect(response.status).toBe(StatusCodes.NOT_FOUND);
-        expect(response.body).toEqual({ error: "Vehicle not found: VIN-999" });
+        // Mock `res.status` and `res.json` to be jest mock functions
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+
+        await vehicleController.update(req, res, next);
+
+        expect(next)
+            .toHaveBeenCalledWith(
+                notFoundError(`Vehicle not found: VIN-999`),
+            );
+
+        expect(res.status).not.toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
     });
 
     test("DELETE /vehicles/:number - Success", async () => {
@@ -141,9 +166,21 @@ describe("VehicleController", () => {
     test("DELETE /vehicles/:number - Not Found", async () => {
         mockVehicleService.delete.mockResolvedValue(false);
 
-        const response = await request(app).delete("/vehicles/VIN-999");
+        const { req, res } = createMocks({ params: { number: "VIN-999" }, });
+        const next = jest.fn();
 
-        expect(response.status).toBe(StatusCodes.NOT_FOUND);
-        expect(response.body).toEqual({ error: "Vehicle not found: VIN-999" });
+        // Mock `res.status` and `res.json` to be jest mock functions
+        res.status = jest.fn(() => res);
+        res.json = jest.fn(() => res);
+
+        await vehicleController.delete(req, res, next);
+
+        expect(next)
+            .toHaveBeenCalledWith(
+                notFoundError(`Vehicle not found: VIN-999`),
+            );
+
+        expect(res.status).not.toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
     });
 });
