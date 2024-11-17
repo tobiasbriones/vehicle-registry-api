@@ -4,6 +4,11 @@
 
 import { AppConfig } from "@app/app.config";
 import {
+    driverRegistrationSchema,
+    driverUpdateSchema,
+} from "@app/driver/driver";
+import { DriverController } from "@app/driver/driver.controller";
+import {
     vehicleRegistrationSchema,
     vehicleUpdateSchema,
 } from "@app/vehicle/vehicle";
@@ -11,7 +16,12 @@ import { VehicleController } from "@app/vehicle/vehicle.controller";
 import express, { Router } from "express";
 import { validateBody } from "./app.validation";
 
-export function newAppRouter({ vehicleController }: AppConfig) {
+export function newAppRouter(
+    {
+        vehicleController,
+        driverController,
+    }: AppConfig,
+) {
     const router = express.Router();
 
     router.get("/", (_, res) => {
@@ -19,6 +29,7 @@ export function newAppRouter({ vehicleController }: AppConfig) {
     });
 
     routeVehicles(router, vehicleController);
+    routeDrivers(router, driverController);
     return router;
 }
 
@@ -40,4 +51,27 @@ function routeVehicles(router: Router, vehicleController: VehicleController) {
     );
 
     router.delete("/vehicles/:number", vehicleController.delete);
+}
+
+function routeDrivers(
+    router: Router,
+    driverController: DriverController,
+) {
+    router.post(
+        "/drivers",
+        validateBody(driverRegistrationSchema),
+        driverController.create,
+    );
+
+    router.get("/drivers/:licenseId", driverController.read);
+
+    router.get("/drivers", driverController.readAll);
+
+    router.put(
+        "/drivers/:licenseId",
+        validateBody(driverUpdateSchema),
+        driverController.update,
+    );
+
+    router.delete("/drivers/:licenseId", driverController.delete);
 }
