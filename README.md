@@ -22,7 +22,7 @@ to your local file or environment, so you only need to add your values.
 
 ```
 PORT=3000
-ENV_MODE=development
+NODE_ENV=development
 DB_USER=
 DB_HOST=localhost
 DB_NAME=local_vehicle_registry

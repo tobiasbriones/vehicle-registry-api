@@ -23,7 +23,7 @@ app.use(router);
 
 const server = app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${ port }`);
-    console.log(`[server]: environment: ${ process.env.ENV_MODE }`);
+    console.log(`[server]: environment: ${ process.env.NODE_ENV }`);
 });
 
 export { app, server };

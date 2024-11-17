@@ -10,9 +10,9 @@
         "start": "node dist/app/index.js",
         "start:dev": "npx nodemon --exec 'npm run lint && tsx src/app/index.ts' src/index.ts",
         "lint": "eslint .",
-        "test": "cross-env ENV_MODE=test jest --coverage",
-        "test:coverage": "cross-env ENV_MODE=test jest --coverage",
-        "test:watch": "cross-env ENV_MODE=test jest --coverage --watchAll",
+        "test": "cross-env NODE_ENV=test jest --coverage",
+        "test:coverage": "cross-env NODE_ENV=test jest --coverage",
+        "test:watch": "cross-env NODE_ENV=test jest --coverage --watchAll",
         "view:coverage": "serve coverage/lcov-report",
         "clean": "rm -rf dist/ coverage/ src/**/*.js src/**/*.map"
     },
