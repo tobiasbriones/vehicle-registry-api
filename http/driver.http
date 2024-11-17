@@ -1,0 +1,34 @@
+@host = http://localhost:3000
+
+### Create Driver
+POST {{host}}/drivers
+Content-Type: application/json
+
+{
+    "licenseId": "ABC123456",
+    "firstName": "John",
+    "surName": "Doe",
+    "secondName": "Michael",
+    "secondSurName": "Smith"
+}
+
+### Fetch Driver
+GET {{host}}/drivers/ABC123456
+
+### Fetch Drivers
+GET {{host}}/drivers/?limit=2&page=1
+
+### Update Driver
+PUT {{host}}/drivers/ABC123456
+Content-Type: application/json
+
+{
+    "firstName": "Jane",
+    "surName": "Doe",
+    "secondName": "Emily",
+    "secondSurName": "Johnson"
+}
+
+### Delete Driver
+DELETE {{host}}/drivers/ABC123456
+Content-Type: application/json

@@ -3,6 +3,7 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { newAppConfig } from "@app/app.config";
+import { errorHandler } from "@app/app.error";
 import { newAppRouter } from "@app/app.router";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -20,10 +21,11 @@ const router = newAppRouter(config);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(router);
+app.use(errorHandler);
 
 const server = app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${ port }`);
-    console.log(`[server]: environment: ${ process.env.ENV_MODE }`);
+    console.log(`[server]: environment: ${ process.env.NODE_ENV }`);
 });
 
 export { app, server };

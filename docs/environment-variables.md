@@ -20,7 +20,7 @@ into your production environment.
 | Variable      | Description                                                                              | Value              | Dev Value                |
 |---------------|------------------------------------------------------------------------------------------|--------------------|--------------------------|
 | `PORT`        | Port on which the application listens for incoming connections.                          | `3000`             | `3000`                   |
-| `ENV_MODE`    | Mode of the environment the application runs on (development, staging, production, etc). | `production`       | `development`            |
+| `NODE_ENV`    | Mode of the environment the application runs on (development, staging, production, etc). | `production`       | `development`            |
 | `DB_USER`     | Username for the PostgreSQL database connection.                                         | `${ db_user }`     | `tobi`                   |
 | `DB_HOST`     | Hostname of the PostgreSQL database server.                                              | `${ db_hostname }` | `localhost`              |
 | `DB_NAME`     | Name of the PostgreSQL database to connect to.                                           | `vehicle_registry` | `local_vehicle_registry` |

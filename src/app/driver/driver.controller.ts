@@ -3,12 +3,12 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { notFoundError } from "@app/app.error";
-import { Vehicle, vehicleUpdateSchema } from "@app/vehicle/vehicle";
-import { VehicleService } from "@app/vehicle/vehicle.service";
+import { Driver, driverUpdateSchema } from "@app/driver/driver";
+import { DriverService } from "@app/driver/driver.service";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-export type VehicleController = {
+export type DriverController = {
     create: ControllerMethod,
     read: ControllerMethod,
     readAll: ControllerMethod,
@@ -16,29 +16,29 @@ export type VehicleController = {
     delete: ControllerMethod,
 }
 
-export const newVehicleController = (service: VehicleService): VehicleController => ({
+export const newDriverController = (service: DriverService): DriverController => ({
     async create(req, res, next) {
-        const vehicle = req.body as Vehicle;
+        const vehicle = req.body as Driver;
 
-        const respond = (vehicle: Vehicle) => res
+        const respond = (vehicle: Driver) => res
             .status(StatusCodes.CREATED)
             .json(vehicle);
 
         service
             .create(vehicle)
-            .then(respond, next)
+            .then(respond, next);
     },
 
     async read(req, res, next) {
-        const { number } = req.params;
+        const { licenseId } = req.params;
 
-        const respond = (vehicle: Vehicle | null) =>
+        const respond = (vehicle: Driver | null) =>
             vehicle !== null
             ? res.status(StatusCodes.OK).json(vehicle)
-            : next(notFoundError(`Vehicle number not found: ${ number }`));
+            : next(notFoundError(`Driver license ID not found: ${ licenseId }`));
 
         service
-            .read(number)
+            .read(licenseId)
             .then(respond, next);
     },
 
@@ -51,7 +51,7 @@ export const newVehicleController = (service: VehicleService): VehicleController
         const limit = Math.max(queryIntParam("limit", defLimit), 0);
         const page = Math.max(queryIntParam("page", defPage), 1);
 
-        const respond = (vehicles: Vehicle[]) => res
+        const respond = (vehicles: Driver[]) => res
             .status(StatusCodes.OK)
             .json(vehicles);
 
@@ -61,33 +61,33 @@ export const newVehicleController = (service: VehicleService): VehicleController
     },
 
     async update(req, res, next) {
-        const { number } = req.params;
-        const vehicleData = vehicleUpdateSchema.parse(req.body);
-        const vehicle: Vehicle = { number, ...vehicleData };
+        const { licenseId } = req.params;
+        const driverData = driverUpdateSchema.parse(req.body);
+        const driver: Driver = { licenseId, ...driverData };
 
-        const respond = (vehicle: Vehicle | null) =>
+        const respond = (vehicle: Driver | null) =>
             vehicle !== null
             ? res.status(StatusCodes.OK).json(vehicle)
-            : next(notFoundError(`Vehicle not found: ${ number }`));
+            : next(notFoundError(`Driver license ID not found: ${ licenseId }`));
 
         service
-            .update(vehicle)
+            .update(driver)
             .then(respond, next);
     },
 
     async delete(req, res, next) {
-        const { number } = req.params;
+        const { licenseId } = req.params;
 
         const respond = (deletedVehicle: boolean) =>
             deletedVehicle
             ? res.status(StatusCodes.OK)
                  .json({
-                     message: `Vehicle with number ${ number } deleted successfully.`,
+                     message: `Driver with license ID ${ licenseId } deleted successfully.`,
                  })
-            : next(notFoundError(`Vehicle not found: ${number}`));
+            : next(notFoundError(`Driver license ID not found: ${ licenseId }`));
 
         service
-            .delete(number)
+            .delete(licenseId)
             .then(respond, next);
     },
 });
