@@ -13,6 +13,14 @@ Backend API for a vehicle registration web app that allows entrance and leave.
 The Node + Express.js + TypeScript application provides an API for vehicle
 operations.
 
+### Application Database
+
+The [./database](database) project defines the PSQL source code and
+documentation for the database of the Vehicle Registry application.
+
+Check [Setting up the Application Database](database/readme.md#setting-up-the-application-database)
+to get your production and development database running.
+
 ### Environment Variables
 
 The app utilizes environment variables to set production values.
@@ -100,11 +108,6 @@ the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
 
 The [./http](http) project contains `http` files with requests you can run from
 your IDE to test the application API.
-
-## Database
-
-The [./database](database) project defines the PSQL source code and
-documentation for the database of the Vehicle Registry application.
 
 ## Contact
 
