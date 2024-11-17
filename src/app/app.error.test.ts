@@ -4,12 +4,15 @@
 
 import { withError } from "@log/log";
 import { Response } from "express";
+import { objToString } from "@/utils";
 import {
     duplicateError,
     error,
     errorToHttp,
     errorToStatusCode,
     internalError,
+    messageOf,
+    messageOfToString,
     rejectInternalError,
     respondHttpError,
 } from "./app.error";
@@ -124,6 +127,47 @@ describe("internalError", () => {
             "Reason:",
             mockReason.toString(),
         );
+    });
+});
+
+describe("messageOf utilities", () => {
+    it("creates a MessageOf object", () => {
+        const result = messageOf("Error occurred", { field: "name" });
+
+        expect(result).toEqual({
+            message: "Error occurred",
+            target: { field: "name" },
+        });
+    });
+
+    it("converts a MessageOf object to a string (with object target)", () => {
+        const messageObj = messageOf("Validation failed", { field: "email" });
+        const result = messageOfToString(messageObj);
+
+        expect(result)
+            .toBe(`Validation failed: ${ objToString({ field: "email" }) }.`);
+    });
+
+    it(
+        "converts a MessageOf object to a string (with primitive target)",
+        () => {
+            const messageObj = messageOf("Invalid value", 42);
+            const result = messageOfToString(messageObj);
+
+            expect(result).toBe("Invalid value: 42.");
+        },
+    );
+
+    it("handles null or undefined target gracefully", () => {
+        const messageObj = messageOf("No value provided", null);
+        const result = messageOfToString(messageObj);
+
+        expect(result).toBe("No value provided: null.");
+
+        const messageObj2 = messageOf("Missing value", undefined);
+        const result2 = messageOfToString(messageObj2);
+
+        expect(result2).toBe("Missing value: null.");
     });
 });
 

@@ -54,6 +54,20 @@ export const validationError = (info: ErrorInfo): AppError => ({
     info,
 });
 
+export type MessageOf<T> = {
+    message: string,
+    target: T,
+}
+
+export const messageOf = <T>(
+    message: string,
+    target: T,
+): MessageOf<T> => ({ message, target });
+
+export const messageOfToString = <T>(
+    { message, target }: MessageOf<T>,
+) => `${ message }: ${ valToString(target) }.`;
+
 export type HttpError = {
     statusCode: number,
     info: ErrorInfo,
