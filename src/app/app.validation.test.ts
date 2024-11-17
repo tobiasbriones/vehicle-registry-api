@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
-import { objToString } from "@/utils";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
@@ -33,11 +32,11 @@ describe("validateBody Middleware", () => {
         expect(response.status).toBe(StatusCodes.BAD_REQUEST);
         expect(response.body).toEqual({
             type: "ValidationError",
-            info: objToString([
+            info: [
                 { path: "number", message: "Required" },
                 { path: "brand", message: "Required" },
                 { path: "model", message: "Required" },
-            ]),
+            ],
         });
     });
 
