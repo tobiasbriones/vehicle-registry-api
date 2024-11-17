@@ -8,11 +8,11 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export type VehicleController = {
-    create: (req: Request, res: Response, next: NextFunction) => Promise<void>,
-    read: (req: Request, res: Response, next: NextFunction) => Promise<void>,
-    readAll: (req: Request, res: Response, next: NextFunction) => Promise<void>,
-    update: (req: Request, res: Response, next: NextFunction) => Promise<void>,
-    delete: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+    create: ControllerMethod,
+    read: ControllerMethod,
+    readAll: ControllerMethod,
+    update: ControllerMethod,
+    delete: ControllerMethod,
 }
 
 export const newVehicleController = (service: VehicleService): VehicleController => ({
@@ -96,3 +96,9 @@ export const newVehicleController = (service: VehicleService): VehicleController
             .then(respond, next);
     },
 });
+
+type ControllerMethod = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => Promise<void>;
