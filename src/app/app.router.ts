@@ -7,7 +7,8 @@ import {
     vehicleRegistrationSchema,
     vehicleUpdateSchema,
 } from "@app/vehicle/vehicle";
-import express from "express";
+import { VehicleController } from "@app/vehicle/vehicle.controller";
+import express, { Router } from "express";
 import { validateBody } from "./app.validation";
 
 export function newAppRouter({ vehicleController }: AppConfig) {
@@ -17,6 +18,11 @@ export function newAppRouter({ vehicleController }: AppConfig) {
         res.send("Vehicle Registry Server");
     });
 
+    routeVehicles(router, vehicleController);
+    return router;
+}
+
+function routeVehicles(router: Router, vehicleController: VehicleController) {
     router.post(
         "/vehicles",
         validateBody(vehicleRegistrationSchema),
@@ -34,6 +40,4 @@ export function newAppRouter({ vehicleController }: AppConfig) {
     );
 
     router.delete("/vehicles/:number", vehicleController.delete);
-
-    return router;
 }
