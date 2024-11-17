@@ -190,7 +190,7 @@ describe("respondHttpError", () => {
             .toHaveBeenCalledWith(500);
 
         expect(res.json)
-            .toHaveBeenCalledWith({ error: error.info });
+            .toHaveBeenCalledWith({ error: error });
     });
 
     it("should handle unknown errors gracefully", () => {

@@ -113,16 +113,19 @@ Registers a new vehicle in the database.
 
 - **Description**: A vehicle with the same number already exists in the system.
 - **Content-Type**: `application/json`
-- **Schema**:
+- **Schema** (`DuplicateVehicleInfo`):
   ```json
   {
     "error": {
-      "context": {
-        "message": "string",
-        "target": {
-          "number": "string",
-          "brand": "string",
-          "model": "string"
+      "type": "DuplicateError",
+      "info": {
+        "context": {
+            "message": "string",
+            "target": {
+                "number": "string",
+                "brand": "string",
+                "model": "string"
+            }
         }
       },
       "detail": "string"

@@ -80,11 +80,11 @@ export const errorToHttp = ({ type, info }: AppError): HttpError => ({
 
 export const respondHttpError = (res: Response) => (error: unknown) => {
     if (isAppError(error)) {
-        const { type, info } = error;
+        const { type } = error;
 
         res
             .status(errorToStatusCode(type))
-            .json({ error: info });
+            .json({ error: error });
     }
     else {
         res
