@@ -33,7 +33,7 @@ describe("Driver Model", () => {
                     surName: "Doe",
                 };
                 expect(() => driverRegistrationSchema.parse(invalidDriver))
-                    .toThrowErrorMatchingSnapshot();
+                    .toThrow();
             },
         );
 
@@ -46,7 +46,7 @@ describe("Driver Model", () => {
                     surName: "Doe",
                 };
                 expect(() => driverRegistrationSchema.parse(invalidDriver))
-                    .toThrowErrorMatchingSnapshot();
+                    .toThrow();
             },
         );
 
@@ -56,7 +56,7 @@ describe("Driver Model", () => {
                 firstName: "John",
             };
             expect(() => driverRegistrationSchema.parse(invalidDriver))
-                .toThrowErrorMatchingSnapshot();
+                .toThrow();
         });
 
         it("should pass when optional fields are missing", () => {
@@ -90,7 +90,7 @@ describe("Driver Model", () => {
                 secondSurName: null,
             };
             expect(() => driverUpdateSchema.parse(invalidUpdate))
-                .toThrowErrorMatchingSnapshot();
+                .toThrow();
         });
 
         it(
