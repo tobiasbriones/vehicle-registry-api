@@ -57,6 +57,8 @@ Welcome endpoint for the Vehicle Registry Server.
 
 </details>
 
+### Vehicles
+
 <details>
   <summary>POST /vehicles</summary>
 
@@ -109,53 +111,51 @@ Registers a new vehicle in the database.
       }
       ```
 
-### 409 Conflict
-
-- **Description**: A vehicle with the same number already exists in the system.
-- **Content-Type**: `application/json`
-- **Schema** (`DuplicateVehicleInfo`):
-  ```json
-  {
-    "type": "DuplicateError",
-    "info": {
-      "context": {
-        "message": "string",
-        "target": {
-          "number": "string",
-          "brand": "string",
-          "model": "string"
+- **409 Conflict**
+    - **Description**: A vehicle with the same number already exists in the system.
+    - **Content-Type**: `application/json`
+    - **Schema** (`DuplicateVehicleInfo`):
+      ```json
+      {
+        "type": "DuplicateError",
+        "info": {
+          "context": {
+            "message": "string",
+            "target": {
+              "number": "string",
+              "brand": "string",
+              "model": "string"
+            }
+          }
+        },
+        "detail": "string"
+      }
+        ```
+    - **Where**:
+      ```typescript
+      export type DuplicateVehicleInfo = {
+        context: MessageOf<Vehicle>,
+        detail: string,
+      }
+      ```
+    
+    - **Example**:
+      ```json
+      {
+        "type": "DuplicateError",
+        "info": {
+          "context": {
+            "message": "Fail to create vehicle",
+            "target": {
+              "number": "VIN-example",
+              "brand": "Toyota",
+              "model": "Camry"
+            }
+          },
+          "detail": "A vehicle with this number already exists."
         }
       }
-    },
-    "detail": "string"
-  }
-  ```
-- **Where**:
-
-```typescript
-  export type DuplicateVehicleInfo = {
-    context: MessageOf<Vehicle>,
-    detail: string,
-}
-```
-
-- **Example**:
-  ```json
-  {
-    "type": "DuplicateError",
-    "info": {
-      "context": {
-        "message": "Fail to create vehicle",
-        "target": {
-          "number": "VIN-example",
-          "brand": "Toyota",
-          "model": "Camry"
-        }
-      },
-      "detail": "A vehicle with this number already exists."
-    }
-  }
-  ```
+      ```
 
 - **400 Bad Request**
     - **Description**: Validation error in the request body.
@@ -225,7 +225,7 @@ Registers a new vehicle in the database.
 </details>
 
 <details>
-  <summary>GET /vehicles/{number}</summary>
+  <summary>GET /vehicles/:number</summary>
 
 ### Description
 
