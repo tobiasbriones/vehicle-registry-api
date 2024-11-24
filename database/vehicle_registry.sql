@@ -6,9 +6,9 @@
 CREATE TABLE vehicle
 (
     id     INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    number VARCHAR(20)  NOT NULL UNIQUE CHECK (TRIM(brand) <> ''),
+    number VARCHAR(20)  NOT NULL UNIQUE CHECK (TRIM(number) <> ''),
     brand  VARCHAR(100) NOT NULL CHECK (TRIM(brand) <> ''),
-    model  VARCHAR(100) NOT NULL CHECK (TRIM(brand) <> '')
+    model  VARCHAR(100) NOT NULL CHECK (TRIM(model) <> '')
 );
 
 -- Driver
@@ -28,9 +28,9 @@ CREATE TABLE driver_name
 (
     driver_id      INTEGER     NOT NULL,
     first_name     VARCHAR(30) NOT NULL CHECK (TRIM(first_name) <> ''),
-    sur_name       VARCHAR(30) NOT NULL CHECK (TRIM(first_name) <> ''),
-    second_name    VARCHAR(30) NULL CHECK (TRIM(first_name) <> ''),
-    second_surname VARCHAR(30) NULL CHECK (TRIM(first_name) <> ''),
+    sur_name       VARCHAR(30) NOT NULL CHECK (TRIM(sur_name) <> ''),
+    second_name    VARCHAR(30) NULL CHECK (TRIM(second_name) <> ''),
+    second_surname VARCHAR(30) NULL CHECK (TRIM(second_surname) <> ''),
 
     FOREIGN KEY (driver_id) REFERENCES driver (id) ON DELETE CASCADE
 );
