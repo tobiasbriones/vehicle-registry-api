@@ -3,7 +3,11 @@
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
 import { notFoundError } from "@app/app.error";
-import { Driver, driverUpdateSchema } from "@app/driver/driver";
+import {
+    Driver,
+    driverFromUpdateBody,
+    driverUpdateSchema,
+} from "@app/driver/driver";
 import { DriverService } from "@app/driver/driver.service";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -63,7 +67,7 @@ export const newDriverController = (service: DriverService): DriverController =>
     async update(req, res, next) {
         const { licenseId } = req.params;
         const driverData = driverUpdateSchema.parse(req.body);
-        const driver: Driver = { licenseId, ...driverData };
+        const driver = driverFromUpdateBody(licenseId, driverData);
 
         const respond = (vehicle: Driver | null) =>
             vehicle !== null

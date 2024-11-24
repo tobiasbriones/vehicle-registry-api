@@ -36,6 +36,29 @@ export const driverRegistrationSchema = z.object({
 export const driverUpdateSchema = z.object({
     firstName: z.string().max(30).trim().min(1),
     surName: z.string().max(30).trim().min(1),
-    secondName: z.string().max(30).trim().min(1),
-    secondSurName: z.string().max(30).trim().min(1),
+    secondName: z.string().max(30).trim().min(1).nullable(),
+    secondSurName: z.string().max(30).trim().min(1).nullable(),
 }).strict();
+
+export type DriverUpdateBody = {
+    firstName: string,
+    surName: string,
+    secondName: string | null,
+    secondSurName: string | null,
+}
+
+export const driverFromUpdateBody = (
+    licenseId: string,
+    {
+        firstName,
+        surName,
+        secondName,
+        secondSurName,
+    }: DriverUpdateBody,
+): Driver => ({
+    licenseId,
+    firstName,
+    surName,
+    secondName: secondName ?? undefined,
+    secondSurName: secondSurName ?? undefined,
+});
