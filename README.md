@@ -92,14 +92,21 @@ documentation.
 
 ## Vehicle Registry API
 
-| Endpoint               | Method | Description                 |
-|------------------------|--------|-----------------------------|
-| `/`                    | GET    | Welcome  server message.    |
-| `/vehicles`            | POST   | Registers a new vehicle.    |
-| `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
-| `/vehicles`            | GET    | Fetches a list of vehicles. |
-| `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
-| `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
+| Endpoint              | Method | Description                 |
+|-----------------------|--------|-----------------------------|
+| `/`                   | GET    | Welcome  server message.    |
+| **Vehicles**          |        |                             |
+| `/vehicles`           | POST   | Registers a new vehicle.    |
+| `/vehicles/:number`   | GET    | Fetches a vehicle.          |
+| `/vehicles`           | GET    | Fetches a list of vehicles. |
+| `/vehicles/:number`   | PUT    | Updates a vehicle.          |
+| `/vehicles/:number`   | DELETE | Deletes a vehicle.          |
+| **Drivers**           |        |                             |
+| `/drivers`            | POST   | Registers a new driver.     |
+| `/drivers/:licenseId` | GET    | Fetches a driver.           |
+| `/drivers`            | GET    | Fetches a list of drivers.  |
+| `/drivers/:licenseId` | PUT    | Updates a driver.           |
+| `/drivers/:licenseId` | DELETE | Deletes a diver.            |
 
 The complete API documentation is at
 the [vehicle-registry-api](docs/vehicle-registry-api.md) page.

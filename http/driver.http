@@ -7,9 +7,7 @@ Content-Type: application/json
 {
     "licenseId": "ABC123456",
     "firstName": "John",
-    "surName": "Doe",
-    "secondName": "Michael",
-    "secondSurName": "Smith"
+    "surname": "Doe"
 }
 
 ### Fetch Driver
@@ -24,9 +22,9 @@ Content-Type: application/json
 
 {
     "firstName": "Jane",
-    "surName": "Doe",
+    "surname": "Doe",
     "secondName": "Emily",
-    "secondSurName": "Johnson"
+    "secondSurname": "Johnson"
 }
 
 ### Delete Driver
