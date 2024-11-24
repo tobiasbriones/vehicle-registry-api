@@ -35,9 +35,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
         const {
             licenseId,
             firstName,
-            surName,
+            surname,
             secondName,
-            secondSurName,
+            secondSurname,
         } = driver;
 
         const driverQuery = `
@@ -47,7 +47,7 @@ export const newDriverService = (pool: Pool): DriverService => ({
         `;
 
         const driverNameQuery = `
-            INSERT INTO driver_name (driver_id, first_name, sur_name,
+            INSERT INTO driver_name (driver_id, first_name, surname,
                                      second_name, second_surname)
             VALUES ($1, $2, $3, $4, $5);
         `;
@@ -90,9 +90,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
             await client.query(driverNameQuery, [
                 driverId,
                 firstName,
-                surName,
+                surname,
                 secondName || null,
-                secondSurName || null,
+                secondSurname || null,
             ]);
 
             await client.query("COMMIT");
@@ -112,9 +112,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
         const query = `
             SELECT driver.license_id   AS "licenseId",
                    name.first_name     AS "firstName",
-                   name.sur_name       AS "surName",
+                   name.surname        AS "surname",
                    name.second_name    AS "secondName",
-                   name.second_surname AS "secondSurName"
+                   name.second_surname AS "secondSurname"
             FROM driver
                      INNER JOIN driver_name name ON driver.id = name.driver_id
             WHERE driver.license_id = $1;
@@ -137,9 +137,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
         const query = `
             SELECT driver.license_id   AS "licenseId",
                    name.first_name     AS "firstName",
-                   name.sur_name       AS "surName",
+                   name.surname       AS "surname",
                    name.second_name    AS "secondName",
-                   name.second_surname AS "secondSurName"
+                   name.second_surname AS "secondSurname"
             FROM driver
                      INNER JOIN driver_name name ON driver.id = name.driver_id
             ORDER BY driver.id DESC
@@ -161,15 +161,15 @@ export const newDriverService = (pool: Pool): DriverService => ({
         const {
             licenseId,
             firstName,
-            surName,
+            surname,
             secondName,
-            secondSurName,
+            secondSurname,
         } = driver;
 
         const nameQuery = `
             UPDATE driver_name AS name
             SET first_name     = $1,
-                sur_name       = $2,
+                surname       = $2,
                 second_name    = $3,
                 second_surname = $4
             FROM driver
@@ -177,9 +177,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
               AND name.driver_id = driver.id
             RETURNING
                 first_name AS "firstName",
-                sur_name AS "surName",
+                surname AS "surname",
                 second_name AS "secondName",
-                second_surname AS "secondSurName";
+                second_surname AS "secondSurname";
         `;
 
         const handleError = async (reason: unknown) => {
@@ -192,9 +192,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
         try {
             const nameUpdateResult = await pool.query(nameQuery, [
                 firstName,
-                surName,
+                surname,
                 secondName || null,
-                secondSurName || null,
+                secondSurname || null,
                 licenseId,
             ]);
 
@@ -205,9 +205,9 @@ export const newDriverService = (pool: Pool): DriverService => ({
             return {
                 licenseId,
                 firstName: nameUpdateResult.rows[0].firstName,
-                surName: nameUpdateResult.rows[0].surName,
+                surname: nameUpdateResult.rows[0].surname,
                 secondName: nameUpdateResult.rows[0].secondName,
-                secondSurName: nameUpdateResult.rows[0].secondSurName,
+                secondSurname: nameUpdateResult.rows[0].secondSurname,
             };
         }
         catch (error) {
