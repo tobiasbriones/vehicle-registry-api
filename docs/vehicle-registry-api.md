@@ -2,14 +2,21 @@
 
 ## Endpoint Summary
 
-| Endpoint               | Method | Description                 |
-|------------------------|--------|-----------------------------|
-| `/`                    | GET    | Welcome  server message.    |
-| `/vehicles`            | POST   | Registers a new vehicle.    |
-| `/vehicles/{ number }` | GET    | Fetches a vehicle.          |
-| `/vehicles`            | GET    | Fetches a list of vehicles. |
-| `/vehicles/{ number }` | PUT    | Updates a vehicle.          |
-| `/vehicles/{ number }` | DELETE | Deletes a vehicles.         |
+| Endpoint              | Method | Description                 |
+|-----------------------|--------|-----------------------------|
+| `/`                   | GET    | Welcome  server message.    |
+| **Vehicles**          |        |                             |
+| `/vehicles`           | POST   | Registers a new vehicle.    |
+| `/vehicles/:number`   | GET    | Fetches a vehicle.          |
+| `/vehicles`           | GET    | Fetches a list of vehicles. |
+| `/vehicles/:number`   | PUT    | Updates a vehicle.          |
+| `/vehicles/:number`   | DELETE | Deletes a vehicle.          |
+| **Drivers**           |        |                             |
+| `/drivers`            | POST   | Registers a new driver.     |
+| `/drivers/:licenseId` | GET    | Fetches a driver.           |
+| `/drivers`            | GET    | Fetches a list of drivers.  |
+| `/drivers/:licenseId` | PUT    | Updates a driver.           |
+| `/drivers/:licenseId` | DELETE | Deletes a diver.            |
 
 ## Commons
 
@@ -444,6 +451,445 @@ Deletes a vehicle with the specified unique vehicle number.
       ```json
       {
         "error": "Vehicle not found: VIN-123"
+      }
+      ```
+
+- **500 Internal Server Error**
+
+</details>
+
+### Drivers
+
+<details>
+  <summary>POST /drivers</summary>
+
+### Description
+
+Registers a new driver in the database.
+
+#### Request
+
+- **Path Parameters**: None
+- **Query Parameters**: None
+- **Request Body**:
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "licenseId": "string",
+        "firstName": "string",
+        "surName": "string",
+        "secondName": "string | null",
+        "secondSurName": "string | null"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "licenseId": "ID-123456",
+        "firstName": "John",
+        "surName": "Doe",
+        "secondName": "Andrew",
+        "secondSurName": "Smith"
+      }
+      ```
+
+#### Responses
+
+- **201 Created**
+    - **Description**: Driver successfully created.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "licenseId": "string",
+        "firstName": "string",
+        "surName": "string",
+        "secondName": "string | null",
+        "secondSurName": "string | null"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "licenseId": "ID-123456",
+        "firstName": "John",
+        "surName": "Doe",
+        "secondName": "Andrew",
+        "secondSurName": "Smith"
+      }
+      ```
+
+- **409 Conflict**
+    - **Description**: A driver with the same license ID already exists.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "type": "DuplicateError",
+        "info": {
+          "context": {
+            "message": "string",
+            "target": {
+              "licenseId": "string",
+              "firstName": "string",
+              "surName": "string",
+              "secondName": "string | null",
+              "secondSurName": "string | null"
+            }
+          }
+        },
+        "detail": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "type": "DuplicateError",
+        "info": {
+          "context": {
+            "message": "Fail to create driver",
+            "target": {
+              "licenseId": "ID-123456",
+              "firstName": "John",
+              "surName": "Doe",
+              "secondName": "Andrew",
+              "secondSurName": "Smith"
+            }
+          }
+        },
+        "detail": "A driver with this license ID already exists."
+      }
+      ```
+
+- **400 Bad Request**
+    - **Description**: Validation error in the request body.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "type": "ValidationError",
+        "info": [
+          {
+            "path": "string",
+            "message": "string"
+          }
+        ]
+      }
+      ```
+
+##### Schema Validation
+
+All fields must adhere to the following schema:
+
+```json
+{
+    "licenseId": {
+        "type": "string",
+        "constraints": {
+            "minLength": 6,
+            "maxLength": 20,
+            "pattern": "^[A-Za-z0-9-]+$",
+            "description": "Only letters, numbers, and hyphens are allowed."
+        }
+    },
+    "firstName": {
+        "type": "string",
+        "constraints": {
+            "minLength": 1,
+            "maxLength": 30
+        }
+    },
+    "surName": {
+        "type": "string",
+        "constraints": {
+            "minLength": 1,
+            "maxLength": 30
+        }
+    },
+    "secondName": {
+        "type": "string | null",
+        "constraints": {
+            "minLength": 1,
+            "maxLength": 30,
+            "optional": true
+        }
+    },
+    "secondSurName": {
+        "type": "string | null",
+        "constraints": {
+            "minLength": 1,
+            "maxLength": 30,
+            "optional": true
+        }
+    }
+}
+```
+
+- **Example**:
+  ```json
+  {
+    "type": "ValidationError",
+    "info": [
+      {
+        "path": "firstName",
+        "message": "String must contain at least 1 character(s)"
+      }
+    ]
+  }
+  ```
+
+- **500 Internal Server Error**
+
+</details>
+
+<details>
+  <summary>GET /drivers/:licenseId</summary>
+
+### Description
+
+Fetches details of a specific driver by their unique license ID.
+
+#### Request
+
+- **Path Parameters**:
+    - `licenseId` (string): Unique identifier for the driver.
+- **Query Parameters**: None
+- **Request Body**: None
+
+#### Responses
+
+- **200 OK**
+    - **Description**: Driver details successfully retrieved.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "licenseId": "string",
+        "firstName": "string",
+        "surName": "string",
+        "secondName": "string | null",
+        "secondSurName": "string | null"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "licenseId": "ID-123456",
+        "firstName": "John",
+        "surName": "Doe",
+        "secondName": "Andrew",
+        "secondSurName": "Smith"
+      }
+      ```
+
+- **404 Not Found**
+    - **Description**: Driver with the specified license ID was not found.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "type": "NotFoundError",
+        "info": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "type": "NotFoundError",
+        "info": "Driver license ID not found: ID-123456"
+      }
+      ```
+
+- **500 Internal Server Error**
+
+</details>
+
+<details>
+  <summary>GET /drivers</summary>
+
+### Description
+
+Retrieves a paginated list of all drivers.
+
+### Request
+
+- **Path Parameters**: None
+- **Query Parameters**:
+    - `limit` (number, optional): Maximum number of results per page. Defaults
+      to 10.
+    - `page` (number, optional): Page number to retrieve. Defaults to 1.
+
+### Responses
+
+- **200 OK**
+    - **Description**: List of drivers successfully retrieved.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      [
+        {
+          "licenseId": "string",
+          "firstName": "string",
+          "surName": "string",
+          "secondName": "string | null",
+          "secondSurName": "string | null"
+        }
+      ]
+      ```
+    - **Example**:
+      ```json
+      [
+        {
+          "licenseId": "ID-123456",
+          "firstName": "John",
+          "surName": "Doe",
+          "secondName": "Andrew",
+          "secondSurName": "Smith"
+        },
+        {
+          "licenseId": "ID-789012",
+          "firstName": "Jane",
+          "surName": "Smith",
+          "secondName": null,
+          "secondSurName": null
+        }
+      ]
+      ```
+- **500 Internal Server Error**
+
+</details>
+
+<details>
+  <summary>PUT /vehicles/:licenseId</summary>
+
+### Description
+
+Updates the details of an existing driver based on their license ID.
+
+#### Request
+
+- **Path Parameters**:
+    - `licenseId` (string, required): The unique identifier for the driver's
+      license.
+
+- **Query Parameters**: None
+
+- **Request Body**:
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "firstName": "string (1-30 characters)",
+        "surName": "string (1-30 characters)",
+        "secondName": "string (1-30 characters, optional)",
+        "secondSurName": "string (1-30 characters, optional)"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "firstName": "John",
+        "surName": "Doe",
+        "secondName": "Michael",
+        "secondSurName": null
+      }
+      ```
+
+#### Responses
+
+- **200 OK**
+    - **Description**: Successfully updated the driver details.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "licenseId": "string",
+        "firstName": "string",
+        "surName": "string",
+        "secondName": "string or null",
+        "secondSurName": "string or null"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "licenseId": "A123456",
+        "firstName": "John",
+        "surName": "Doe",
+        "secondName": "Michael",
+        "secondSurName": null
+      }
+      ```
+
+- **404 Not Found**
+    - **Description**: Driver with the specified license ID not found.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Driver license ID not found: A123456"
+      }
+      ```
+
+- **500 Internal Server Error**
+
+</details>
+
+<details>
+  <summary>DELETE /vehicles/:licenseId</summary>
+
+### Description
+
+Deletes an existing driver based on their license ID.
+
+#### Request
+
+- **Path Parameters**:
+    - `licenseId` (string, required): The unique identifier for the driver's
+      license.
+
+- **Query Parameters**: None
+
+- **Request Body**: None
+
+#### Responses
+
+- **200 OK**
+    - **Description**: Successfully deleted the driver.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "message": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "message": "Driver with license ID A123456 deleted successfully."
+      }
+      ```
+
+- **404 Not Found**
+    - **Description**: Driver with the specified license ID not found.
+    - **Content-Type**: `application/json`
+    - **Schema**:
+      ```json
+      {
+        "error": "string"
+      }
+      ```
+    - **Example**:
+      ```json
+      {
+        "error": "Driver license ID not found: A123456"
       }
       ```
 
