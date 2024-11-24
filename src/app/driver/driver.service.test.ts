@@ -29,9 +29,9 @@ describe("DriverService create method", () => {
             const driver: Driver = {
                 licenseId: "D123456",
                 firstName: "John",
-                surName: "Doe",
+                surname: "Doe",
                 secondName: "Michael",
-                secondSurName: "Smith",
+                secondSurname: "Smith",
             };
 
             mockPool.connect = jest.fn().mockResolvedValueOnce({
@@ -59,9 +59,9 @@ describe("DriverService create method", () => {
         const driver: Driver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
             secondName: "Michael",
-            secondSurName: "Smith",
+            secondSurname: "Smith",
         };
 
         const mockError = new Error(
@@ -86,9 +86,9 @@ describe("DriverService create method", () => {
         const driver: Driver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
             secondName: "Michael",
-            secondSurName: "Smith",
+            secondSurname: "Smith",
         };
 
         const mockError = new Error("Unexpected error");
@@ -130,9 +130,9 @@ describe("DriverService read method", () => {
         const driver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
             secondName: "Michael",
-            secondSurName: "Smith",
+            secondSurname: "Smith",
         };
 
         mockPool.query = jest.fn().mockResolvedValueOnce({
@@ -191,8 +191,8 @@ describe("DriverService readAll method", () => {
 
     it("should retrieve drivers with correct limit and offset", async () => {
         const mockDrivers: Driver[] = [
-            { licenseId: "D123456", firstName: "John", surName: "Doe" },
-            { licenseId: "D789012", firstName: "Jane", surName: "Smith" },
+            { licenseId: "D123456", firstName: "John", surname: "Doe" },
+            { licenseId: "D789012", firstName: "Jane", surname: "Smith" },
         ];
         mockPool.query = jest.fn().mockResolvedValueOnce({
             rows: mockDrivers,
@@ -250,7 +250,7 @@ describe("DriverService update method", () => {
             const mockDriver = {
                 licenseId: "D123456",
                 firstName: "John",
-                surName: "Doe",
+                surname: "Doe",
             };
 
             mockPool.query = jest.fn().mockResolvedValueOnce({
@@ -266,7 +266,7 @@ describe("DriverService update method", () => {
                 expect.stringContaining("UPDATE driver"),
                 [
                     mockDriver.firstName,
-                    mockDriver.surName,
+                    mockDriver.surname,
                     null,
                     null,
                     mockDriver.licenseId,
@@ -279,7 +279,7 @@ describe("DriverService update method", () => {
         const mockDriver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
         };
 
         mockPool.query = jest.fn().mockResolvedValueOnce({
@@ -295,7 +295,7 @@ describe("DriverService update method", () => {
             expect.stringContaining("UPDATE driver"),
             [
                 mockDriver.firstName,
-                mockDriver.surName,
+                mockDriver.surname,
                 null,
                 null,
                 mockDriver.licenseId,
@@ -307,7 +307,7 @@ describe("DriverService update method", () => {
         const mockDriver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
         };
         const mockError = new Error("Query failed");
 

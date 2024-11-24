@@ -15,9 +15,9 @@ describe("Driver Model", () => {
             const validDriver = {
                 licenseId: "12345-ABCDE",
                 firstName: "John",
-                surName: "Doe",
+                surname: "Doe",
                 secondName: "Michael",
-                secondSurName: "Smith",
+                secondSurname: "Smith",
             };
             expect(() => driverRegistrationSchema.parse(validDriver))
                 .not
@@ -30,7 +30,7 @@ describe("Driver Model", () => {
                 const invalidDriver = {
                     licenseId: "1234",
                     firstName: "John",
-                    surName: "Doe",
+                    surname: "Doe",
                 };
                 expect(() => driverRegistrationSchema.parse(invalidDriver))
                     .toThrow();
@@ -43,7 +43,7 @@ describe("Driver Model", () => {
                 const invalidDriver = {
                     licenseId: "1234@abcd",
                     firstName: "John",
-                    surName: "Doe",
+                    surname: "Doe",
                 };
                 expect(() => driverRegistrationSchema.parse(invalidDriver))
                     .toThrow();
@@ -63,7 +63,7 @@ describe("Driver Model", () => {
             const validDriverWithoutOptionalFields = {
                 licenseId: "12345-ABCDE",
                 firstName: "John",
-                surName: "Doe",
+                surname: "Doe",
             };
             expect(() => driverRegistrationSchema.parse(
                 validDriverWithoutOptionalFields)).not.toThrow();
@@ -75,9 +75,9 @@ describe("Driver Model", () => {
         it("should validate a valid driver update body", () => {
             const validUpdate: DriverUpdateBody = {
                 firstName: "Jane",
-                surName: "Doe",
+                surname: "Doe",
                 secondName: "Marie",
-                secondSurName: "Smith",
+                secondSurname: "Smith",
             };
             expect(() => driverUpdateSchema.parse(validUpdate)).not.toThrow();
         });
@@ -85,22 +85,22 @@ describe("Driver Model", () => {
         it("should throw error when required fields are missing", () => {
             const invalidUpdate = {
                 firstName: "",
-                surName: "Doe",
+                surname: "Doe",
                 secondName: null,
-                secondSurName: null,
+                secondSurname: null,
             };
             expect(() => driverUpdateSchema.parse(invalidUpdate))
                 .toThrow();
         });
 
         it(
-            "should pass when nullable secondName and secondSurName are null",
+            "should pass when nullable secondName and secondSurname are null",
             () => {
                 const validUpdate = {
                     firstName: "Jane",
-                    surName: "Doe",
+                    surname: "Doe",
                     secondName: null,
-                    secondSurName: null,
+                    secondSurname: null,
                 };
                 expect(() => driverUpdateSchema.parse(validUpdate))
                     .not
@@ -116,9 +116,9 @@ describe("Driver Model", () => {
             () => {
                 const updateBody: DriverUpdateBody = {
                     firstName: "Jane",
-                    surName: "Doe",
+                    surname: "Doe",
                     secondName: "Marie",
-                    secondSurName: "Smith",
+                    secondSurname: "Smith",
                 };
                 const licenseId = "12345-ABCDE";
                 const result = driverFromUpdateBody(licenseId, updateBody);
@@ -126,21 +126,21 @@ describe("Driver Model", () => {
                 expect(result).toEqual({
                     licenseId: "12345-ABCDE",
                     firstName: "Jane",
-                    surName: "Doe",
+                    surname: "Doe",
                     secondName: "Marie",
-                    secondSurName: "Smith",
+                    secondSurname: "Smith",
                 });
             },
         );
 
         it(
-            "should omit undefined fields for optional secondName and secondSurName",
+            "should omit undefined fields for optional secondName and secondSurname",
             () => {
                 const updateBody: DriverUpdateBody = {
                     firstName: "Jane",
-                    surName: "Doe",
+                    surname: "Doe",
                     secondName: null,
-                    secondSurName: null,
+                    secondSurname: null,
                 };
                 const licenseId = "12345-ABCDE";
                 const result = driverFromUpdateBody(licenseId, updateBody);
@@ -148,9 +148,9 @@ describe("Driver Model", () => {
                 expect(result).toEqual({
                     licenseId: "12345-ABCDE",
                     firstName: "Jane",
-                    surName: "Doe",
+                    surname: "Doe",
                     secondName: undefined,
-                    secondSurName: undefined,
+                    secondSurname: undefined,
                 });
             },
         );

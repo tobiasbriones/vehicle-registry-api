@@ -12,9 +12,9 @@ import { z } from "zod";
 export type Driver = {
     licenseId: string,
     firstName: string,
-    surName: string,
+    surname: string,
     secondName?: string,
-    secondSurName?: string,
+    secondSurname?: string,
 }
 
 export const driverRegistrationSchema = z.object({
@@ -28,37 +28,37 @@ export const driverRegistrationSchema = z.object({
         ),
 
     firstName: z.string().max(30).trim().min(1),
-    surName: z.string().max(30).trim().min(1),
+    surname: z.string().max(30).trim().min(1),
     secondName: z.string().max(30).trim().min(1).optional(),
-    secondSurName: z.string().max(30).trim().min(1).optional(),
+    secondSurname: z.string().max(30).trim().min(1).optional(),
 }).strict();
 
 export const driverUpdateSchema = z.object({
     firstName: z.string().max(30).trim().min(1),
-    surName: z.string().max(30).trim().min(1),
+    surname: z.string().max(30).trim().min(1),
     secondName: z.string().max(30).trim().min(1).nullable(),
-    secondSurName: z.string().max(30).trim().min(1).nullable(),
+    secondSurname: z.string().max(30).trim().min(1).nullable(),
 }).strict();
 
 export type DriverUpdateBody = {
     firstName: string,
-    surName: string,
+    surname: string,
     secondName: string | null,
-    secondSurName: string | null,
+    secondSurname: string | null,
 }
 
 export const driverFromUpdateBody = (
     licenseId: string,
     {
         firstName,
-        surName,
+        surname,
         secondName,
-        secondSurName,
+        secondSurname,
     }: DriverUpdateBody,
 ): Driver => ({
     licenseId,
     firstName,
-    surName,
+    surname,
     secondName: secondName ?? undefined,
-    secondSurName: secondSurName ?? undefined,
+    secondSurname: secondSurname ?? undefined,
 });

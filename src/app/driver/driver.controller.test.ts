@@ -37,7 +37,7 @@ describe("DriverController", () => {
         const newDriver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
         };
         mockDriverService.create.mockResolvedValue(newDriver);
 
@@ -51,7 +51,7 @@ describe("DriverController", () => {
         const newDriver: Driver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
         };
         const { req, res } = createMocks({ body: newDriver });
         const mockError = new Error("Creation error");
@@ -73,7 +73,7 @@ describe("DriverController", () => {
         const driver: Driver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Doe",
+            surname: "Doe",
         };
         mockDriverService.read.mockResolvedValue(driver);
 
@@ -103,8 +103,8 @@ describe("DriverController", () => {
 
     test("GET /drivers - Success", async () => {
         const drivers: Driver[] = [
-            { licenseId: "D123456", firstName: "John", surName: "Doe" },
-            { licenseId: "D789012", firstName: "Jane", surName: "Smith" },
+            { licenseId: "D123456", firstName: "John", surname: "Doe" },
+            { licenseId: "D789012", firstName: "Jane", surname: "Smith" },
         ];
         mockDriverService.readAll.mockResolvedValue(drivers);
 
@@ -118,7 +118,7 @@ describe("DriverController", () => {
         const updatedDriver: Driver = {
             licenseId: "D123456",
             firstName: "John",
-            surName: "Smith",
+            surname: "Smith",
         };
         mockDriverService.update.mockResolvedValue(updatedDriver);
 
@@ -126,9 +126,9 @@ describe("DriverController", () => {
             .put("/drivers/D123456")
             .send({
                 firstName: "John",
-                surName: "Smith",
+                surname: "Smith",
                 secondName: null,
-                secondSurName: null,
+                secondSurname: null,
             });
 
         expect(response.status).toBe(StatusCodes.OK);
@@ -142,9 +142,9 @@ describe("DriverController", () => {
             params: { licenseId: "D999999" },
             body: {
                 firstName: "John",
-                surName: "Smith",
+                surname: "Smith",
                 secondName: null,
-                secondSurName: null,
+                secondSurname: null,
             },
         });
         const next = jest.fn();

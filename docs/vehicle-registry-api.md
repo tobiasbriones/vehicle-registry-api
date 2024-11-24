@@ -478,9 +478,9 @@ Registers a new driver in the database.
       {
         "licenseId": "string",
         "firstName": "string",
-        "surName": "string",
+        "surname": "string",
         "secondName": "string | null",
-        "secondSurName": "string | null"
+        "secondSurname": "string | null"
       }
       ```
     - **Example**:
@@ -488,9 +488,9 @@ Registers a new driver in the database.
       {
         "licenseId": "ID-123456",
         "firstName": "John",
-        "surName": "Doe",
+        "surname": "Doe",
         "secondName": "Andrew",
-        "secondSurName": "Smith"
+        "secondSurname": "Smith"
       }
       ```
 
@@ -504,9 +504,9 @@ Registers a new driver in the database.
       {
         "licenseId": "string",
         "firstName": "string",
-        "surName": "string",
+        "surname": "string",
         "secondName": "string | null",
-        "secondSurName": "string | null"
+        "secondSurname": "string | null"
       }
       ```
     - **Example**:
@@ -514,9 +514,9 @@ Registers a new driver in the database.
       {
         "licenseId": "ID-123456",
         "firstName": "John",
-        "surName": "Doe",
+        "surname": "Doe",
         "secondName": "Andrew",
-        "secondSurName": "Smith"
+        "secondSurname": "Smith"
       }
       ```
 
@@ -533,9 +533,9 @@ Registers a new driver in the database.
             "target": {
               "licenseId": "string",
               "firstName": "string",
-              "surName": "string",
+              "surname": "string",
               "secondName": "string | null",
-              "secondSurName": "string | null"
+              "secondSurname": "string | null"
             }
           }
         },
@@ -552,9 +552,9 @@ Registers a new driver in the database.
             "target": {
               "licenseId": "ID-123456",
               "firstName": "John",
-              "surName": "Doe",
+              "surname": "Doe",
               "secondName": "Andrew",
-              "secondSurName": "Smith"
+              "secondSurname": "Smith"
             }
           }
         },
@@ -600,7 +600,7 @@ All fields must adhere to the following schema:
             "maxLength": 30
         }
     },
-    "surName": {
+    "surname": {
         "type": "string",
         "constraints": {
             "minLength": 1,
@@ -615,7 +615,7 @@ All fields must adhere to the following schema:
             "optional": true
         }
     },
-    "secondSurName": {
+    "secondSurname": {
         "type": "string | null",
         "constraints": {
             "minLength": 1,
@@ -667,9 +667,9 @@ Fetches details of a specific driver by their unique license ID.
       {
         "licenseId": "string",
         "firstName": "string",
-        "surName": "string",
+        "surname": "string",
         "secondName": "string | null",
-        "secondSurName": "string | null"
+        "secondSurname": "string | null"
       }
       ```
     - **Example**:
@@ -677,9 +677,9 @@ Fetches details of a specific driver by their unique license ID.
       {
         "licenseId": "ID-123456",
         "firstName": "John",
-        "surName": "Doe",
+        "surname": "Doe",
         "secondName": "Andrew",
-        "secondSurName": "Smith"
+        "secondSurname": "Smith"
       }
       ```
 
@@ -731,9 +731,9 @@ Retrieves a paginated list of all drivers.
         {
           "licenseId": "string",
           "firstName": "string",
-          "surName": "string",
+          "surname": "string",
           "secondName": "string | null",
-          "secondSurName": "string | null"
+          "secondSurname": "string | null"
         }
       ]
       ```
@@ -743,16 +743,16 @@ Retrieves a paginated list of all drivers.
         {
           "licenseId": "ID-123456",
           "firstName": "John",
-          "surName": "Doe",
+          "surname": "Doe",
           "secondName": "Andrew",
-          "secondSurName": "Smith"
+          "secondSurname": "Smith"
         },
         {
           "licenseId": "ID-789012",
           "firstName": "Jane",
-          "surName": "Smith",
+          "surname": "Smith",
           "secondName": null,
-          "secondSurName": null
+          "secondSurname": null
         }
       ]
       ```
@@ -781,18 +781,18 @@ Updates the details of an existing driver based on their license ID.
       ```json
       {
         "firstName": "string (1-30 characters)",
-        "surName": "string (1-30 characters)",
+        "surname": "string (1-30 characters)",
         "secondName": "string (1-30 characters, optional)",
-        "secondSurName": "string (1-30 characters, optional)"
+        "secondSurname": "string (1-30 characters, optional)"
       }
       ```
     - **Example**:
       ```json
       {
         "firstName": "John",
-        "surName": "Doe",
+        "surname": "Doe",
         "secondName": "Michael",
-        "secondSurName": null
+        "secondSurname": null
       }
       ```
 
@@ -806,9 +806,9 @@ Updates the details of an existing driver based on their license ID.
       {
         "licenseId": "string",
         "firstName": "string",
-        "surName": "string",
+        "surname": "string",
         "secondName": "string or null",
-        "secondSurName": "string or null"
+        "secondSurname": "string or null"
       }
       ```
     - **Example**:
@@ -816,9 +816,9 @@ Updates the details of an existing driver based on their license ID.
       {
         "licenseId": "A123456",
         "firstName": "John",
-        "surName": "Doe",
+        "surname": "Doe",
         "secondName": "Michael",
-        "secondSurName": null
+        "secondSurname": null
       }
       ```
 
