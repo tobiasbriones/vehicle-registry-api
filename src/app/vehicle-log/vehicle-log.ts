@@ -40,6 +40,12 @@ export const vehicleLogRegistrationSchema = z.object({
     mileageInKilometers: z.number().min(0),
 }).strict();
 
+export type VehicleLogUpdateBody = {
+    id: number,
+    logType: VehicleLogType;
+    mileageInKilometers: number;
+};
+
 export const vehicleLogUpdateSchema = z.object({
     logType: z.enum([ "entry", "leave" ]),
     mileageInKilometers: z.number().min(0),
