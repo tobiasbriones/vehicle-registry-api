@@ -10,6 +10,7 @@ export type VehicleLogType = "entry" | "leave";
  * Defines a log when a vehicle accesses or leaves.
  */
 export type VehicleLog = {
+    id: number,
     vehicleNumber: string,
     driverFullName: string,
     logType: VehicleLogType;
