@@ -11,7 +11,8 @@ export type ErrorType
     | "DuplicateError"
     | "ValidationError"
     | "NotFoundError"
-    | "ReferenceNotFoundError";
+    | "ReferenceNotFoundError"
+    | "IncorrectValueError";
 
 export const errorToStatusCode = (error: ErrorType) => {
     const map: Record<ErrorType, StatusCodes> = {
@@ -20,6 +21,7 @@ export const errorToStatusCode = (error: ErrorType) => {
         ValidationError: StatusCodes.BAD_REQUEST,
         NotFoundError: StatusCodes.NOT_FOUND,
         ReferenceNotFoundError: StatusCodes.UNPROCESSABLE_ENTITY,
+        IncorrectValueError: StatusCodes.UNPROCESSABLE_ENTITY,
     };
 
     return map[error];
@@ -70,6 +72,14 @@ export const referenceNotFoundError = (info: ErrorInfo): AppError => ({
 
 export const rejectReferenceNotFoundError = (info: ErrorInfo): Promise<never> =>
     Promise.reject(referenceNotFoundError(info));
+
+export const incorrectValueError = (info: ErrorInfo): AppError => ({
+    type: "IncorrectValueError",
+    info,
+});
+
+export const rejectIncorrectValueError = (info: ErrorInfo): Promise<never> =>
+    Promise.reject(incorrectValueError(info));
 
 export type MessageOf<T> = {
     message: string,
