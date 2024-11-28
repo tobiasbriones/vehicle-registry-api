@@ -51,11 +51,10 @@ export const newVehicleLogService = (
 
         const checkVehicleExists = async (
             client: PoolClient,
-            number: string,
         ): Promise<VehicleExistsResult> => client
             .query(
                 "SELECT id FROM vehicle WHERE number = $1",
-                [ number ],
+                [ vehicleNumber ],
             )
             .then(recordFoundOrNull<VehicleExistsResult>);
 
@@ -63,11 +62,10 @@ export const newVehicleLogService = (
 
         const checkDriverExists = async (
             client: PoolClient,
-            number: string,
         ): Promise<DriverExistsResult> => client
             .query(
                 "SELECT id FROM driver WHERE license_id = $1",
-                [ number ],
+                [ driverLicenseId ],
             )
             .then(recordFoundOrNull<VehicleExistsResult>);
 
@@ -109,10 +107,7 @@ export const newVehicleLogService = (
             await client.query("BEGIN");
 
             // Check if vehicle exists
-            const vehicleExists = await checkVehicleExists(
-                client,
-                vehicleNumber,
-            );
+            const vehicleExists = await checkVehicleExists(client);
 
             if (vehicleExists === null) {
                 throw new Error(`Vehicle with number ${ vehicleNumber } does not exist`);
@@ -121,10 +116,7 @@ export const newVehicleLogService = (
             const vehicleId = vehicleExists.id;
 
             // Check if driver exists
-            const driverExists = await checkDriverExists(
-                client,
-                driverLicenseId,
-            );
+            const driverExists = await checkDriverExists(client);
 
             if (driverExists === null) {
                 throw new Error(`Driver with license ID ${ driverLicenseId } does not exist`);
