@@ -4,7 +4,7 @@
 
 import { z } from "zod";
 
-export type VehicleLogType = "entry" | "leave";
+export type VehicleLogType = "entry" | "exit";
 
 /**
  * Defines a log when a vehicle accesses or leaves.
@@ -36,7 +36,7 @@ export const vehicleLogRegistrationSchema = z.object({
         ),
 
     vehicleNumber: z.string().max(20).trim().min(1),
-    logType: z.enum([ "entry", "leave" ]),
+    logType: z.enum([ "entry", "exit" ]),
     mileageInKilometers: z.number().min(0),
 }).strict();
 
@@ -47,6 +47,6 @@ export type VehicleLogUpdateBody = {
 };
 
 export const vehicleLogUpdateSchema = z.object({
-    logType: z.enum([ "entry", "leave" ]),
+    logType: z.enum([ "entry", "exit" ]),
     mileageInKilometers: z.number().min(0),
 }).strict();
