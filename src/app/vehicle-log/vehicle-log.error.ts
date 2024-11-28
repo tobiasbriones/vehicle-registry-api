@@ -33,3 +33,13 @@ export const incorrectMileageInfo = (
     context: MessageOf<string>,
     detail: string,
 ): IncorrectMileageInfo => ({ context, detail });
+
+export type IncorrectEventInfo = {
+    context: MessageOf<string>,
+    detail: string,
+}
+
+export const incorrectEventInfo = (
+    context: MessageOf<string>,
+    detail: string,
+): IncorrectEventInfo => ({ context, detail });

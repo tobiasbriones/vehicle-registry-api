@@ -13,6 +13,7 @@ import { driverFullName } from "@app/driver/driver";
 import { DriverService } from "@app/driver/driver.service";
 import {
     driverNotFoundInfo,
+    incorrectEventInfo,
     incorrectMileageInfo,
     vehicleNotFoundInfo,
 } from "@app/vehicle-log/vehicle-log.error";
@@ -21,6 +22,7 @@ import { Pool, PoolClient, QueryResult } from "pg";
 import {
     VehicleLog,
     VehicleLogCreateBody,
+    VehicleLogType,
     VehicleLogUpdateBody,
 } from "./vehicle-log";
 
@@ -101,6 +103,43 @@ export const newVehicleLogService = (
                 lastMileage: res.rows[0].lastMileage,
             }));
 
+        type EventIsValidResult = {
+            isValid: boolean,
+            lastEvent: VehicleLogType
+        };
+
+        const checkEventIsValid = async (
+            client: PoolClient,
+            vehicleId: number,
+        ): Promise<EventIsValidResult> => client
+            .query(
+                `
+                    WITH last_event AS (SELECT event_type
+                                        FROM vehicle_log
+                                        WHERE vehicle_id = $1
+                                        ORDER BY event_timestamp DESC
+                                        LIMIT 1)
+                    SELECT CASE
+                               WHEN NOT EXISTS (SELECT 1 FROM last_event)
+                                   THEN TRUE -- No previous records, valid to start with any event
+                               WHEN $2 = 'entry' AND
+                                    (SELECT event_type FROM last_event) = 'exit'
+                                   THEN TRUE -- Last event was 'exit', current can be 'entry'
+                               WHEN $2 = 'exit' AND
+                                    (SELECT event_type FROM last_event) =
+                                    'entry'
+                                   THEN TRUE -- Last event was 'entry', current can be 'exit'
+                               ELSE FALSE -- Invalid: Repeating the same event or invalid transition
+                               END                             AS "isValid",
+                           (SELECT event_type FROM last_event) AS "lastEvent";
+                `,
+                [ vehicleId, logType ],
+            )
+            .then(res => ({
+                isValid: res.rows[0].isValid,
+                lastEvent: res.rows[0].lastEvent,
+            }));
+
         const rejectReason = (reason: unknown) => (context: MessageOf<string>) => {
             const reasonStr = String(reason);
             let reject;
@@ -125,6 +164,13 @@ export const newVehicleLogService = (
                 info = incorrectMileageInfo(
                     context,
                     `${ reasonStr } Vehicle mileage can only be greater than or equals to the last mileage recorded (i.e., increasing) or zero (i.e., reset).`,
+                );
+            }
+            else if (reasonStr.includes(`Provided log type ${ logType } is invalid`)) {
+                reject = rejectIncorrectValueError;
+                info = incorrectEventInfo(
+                    context,
+                    `${ reasonStr } Log type cannot be the same of the last vehicle log.`,
                 );
             }
             else {
@@ -169,6 +215,15 @@ export const newVehicleLogService = (
             if (!isMileageValid.isValid) {
                 throw new Error(
                     `Provided vehicle mileage ${ mileageInKilometers } is invalid. Last recorded mileage: ${ isMileageValid.lastMileage }.`,
+                );
+            }
+
+            // Ensure the event is valid (i.e., entry -> exit -> entry -> ...)
+            const isEventValid = await checkEventIsValid(client, vehicleId);
+
+            if (!isEventValid.isValid) {
+                throw new Error(
+                    `Provided log type "${ logType }" is invalid. Last recorded log: "${ isEventValid.lastEvent }".`,
                 );
             }
 
