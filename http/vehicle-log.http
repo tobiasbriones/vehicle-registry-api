@@ -1,0 +1,31 @@
+@host = http://localhost:3000
+
+### Create Vehicle Log
+POST {{host}}/logs
+Content-Type: application/json
+
+{
+    "vehicleNumber": "VIN-015",
+    "driverLicenseId": "D678234",
+    "logType": "entry",
+    "mileageInKilometers": 1000
+}
+
+### Fetch Vehicle
+GET {{host}}/logs/134
+
+### Fetch Vehicles
+GET {{host}}/logs/?limit=22&page=1
+
+### Update Vehicle
+PUT {{host}}/logs/1
+Content-Type: application/json
+
+{
+    "logType": "exit",
+    "mileageInKilometers": 900
+}
+
+### Delete Vehicle
+DELETE {{host}}/logs/1
+Content-Type: application/json

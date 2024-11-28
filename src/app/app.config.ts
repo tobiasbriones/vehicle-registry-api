@@ -9,6 +9,11 @@ import {
 } from "@app/driver/driver.controller";
 import { newDriverService } from "@app/driver/driver.service";
 import {
+    newVehicleLogController,
+    VehicleLogController,
+} from "@app/vehicle-log/vehicle-log.controller";
+import { newVehicleLogService } from "@app/vehicle-log/vehicle-log.service";
+import {
     newVehicleController,
     VehicleController,
 } from "@app/vehicle/vehicle.controller";
@@ -17,15 +22,18 @@ import { newVehicleService } from "@app/vehicle/vehicle.service";
 export type AppConfig = {
     vehicleController: VehicleController
     driverController: DriverController
+    vehicleLogController: VehicleLogController
 }
 
-export function newAppConfig() {
+export function newAppConfig(): AppConfig {
     const { dbPool } = newAppDatabase();
     const vehicleService = newVehicleService(dbPool);
     const driverService = newDriverService(dbPool);
+    const vehicleLogService = newVehicleLogService(dbPool, driverService);
 
     return {
         vehicleController: newVehicleController(vehicleService),
         driverController: newDriverController(driverService),
+        vehicleLogController: newVehicleLogController(vehicleLogService),
     };
 }
