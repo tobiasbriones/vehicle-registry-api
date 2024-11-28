@@ -47,7 +47,7 @@ export const newVehicleLogService = (
             ? res.rows[0] as T
             : null;
 
-        type VehicleExistsResult = { id: string } | null;
+        type VehicleExistsResult = { id: number } | null;
 
         const checkVehicleExists = async (
             client: PoolClient,
@@ -58,7 +58,7 @@ export const newVehicleLogService = (
             )
             .then(recordFoundOrNull<VehicleExistsResult>);
 
-        type DriverExistsResult = { id: string } | null;
+        type DriverExistsResult = { id: number } | null;
 
         const checkDriverExists = async (
             client: PoolClient,
