@@ -5,6 +5,7 @@
 import {
     MessageOf,
     messageOf,
+    rejectIncorrectValueError,
     rejectInternalError,
     rejectReferenceNotFoundError,
 } from "@app/app.error";
@@ -12,6 +13,7 @@ import { driverFullName } from "@app/driver/driver";
 import { DriverService } from "@app/driver/driver.service";
 import {
     driverNotFoundInfo,
+    incorrectMileageInfo,
     vehicleNotFoundInfo,
 } from "@app/vehicle-log/vehicle-log.error";
 import { withError } from "@log/log";
@@ -69,6 +71,36 @@ export const newVehicleLogService = (
             )
             .then(recordFoundOrNull<VehicleExistsResult>);
 
+        type MileageIsValidResult = { isValid: boolean, lastMileage: number };
+
+        const checkMileageIsValid = async (
+            client: PoolClient,
+            vehicleId: number,
+        ): Promise<MileageIsValidResult> => client
+            .query(
+                `
+                    WITH last_mileage AS (SELECT mileage
+                                          FROM vehicle_log
+                                          WHERE vehicle_id = $1
+                                          ORDER BY event_timestamp DESC
+                                          LIMIT 1)
+                    SELECT CASE
+                               WHEN NOT EXISTS (SELECT 1 FROM last_mileage)
+                                   THEN TRUE -- No previous records, valid to start at any mileage
+                               WHEN $2 >= (SELECT mileage FROM last_mileage)
+                                   THEN TRUE -- New mileage is greater or equal to the last mileage
+                               ELSE FALSE -- New mileage is less than the last mileage
+                               END                            AS "isValid",
+                           (SELECT mileage FROM last_mileage) AS "lastMileage"
+
+                `,
+                [ vehicleId, mileageInKilometers ],
+            )
+            .then(res => ({
+                isValid: res.rows[0].isValid,
+                lastMileage: res.rows[0].lastMileage,
+            }));
+
         const rejectReason = (reason: unknown) => (context: MessageOf<string>) => {
             const reasonStr = String(reason);
             let reject;
@@ -86,6 +118,13 @@ export const newVehicleLogService = (
                 info = driverNotFoundInfo(
                     context,
                     "A driver with this license ID was not found.",
+                );
+            }
+            else if (reasonStr.includes(`Provided vehicle mileage ${ mileageInKilometers } is invalid`)) {
+                reject = rejectIncorrectValueError;
+                info = incorrectMileageInfo(
+                    context,
+                    `${ reasonStr } Vehicle mileage can only be greater than or equals to the last mileage recorded (i.e., increasing) or zero (i.e., reset).`,
                 );
             }
             else {
@@ -123,6 +162,15 @@ export const newVehicleLogService = (
             }
 
             const driverId = driverExists.id;
+
+            // Ensure the mileage is valid (i.e., increasing or zero)
+            const isMileageValid = await checkMileageIsValid(client, vehicleId);
+
+            if (!isMileageValid.isValid) {
+                throw new Error(
+                    `Provided vehicle mileage ${ mileageInKilometers } is invalid. Last recorded mileage: ${ isMileageValid.lastMileage }.`,
+                );
+            }
 
             // Create vehicle log
             const createLogQuery = `

@@ -23,3 +23,13 @@ export const driverNotFoundInfo = (
     context: MessageOf<string>,
     detail: string,
 ): DriverNotFoundError => ({ context, detail });
+
+export type IncorrectMileageInfo = {
+    context: MessageOf<string>,
+    detail: string,
+}
+
+export const incorrectMileageInfo = (
+    context: MessageOf<string>,
+    detail: string,
+): IncorrectMileageInfo => ({ context, detail });
