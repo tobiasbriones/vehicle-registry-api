@@ -76,7 +76,7 @@ describe("VehicleLog Schemas", () => {
     describe("vehicleLogUpdateSchema", () => {
         test("Validates successfully with correct data", () => {
             const validData = {
-                logType: "leave",
+                logType: "exit",
                 mileageInKilometers: 5000,
             };
 
