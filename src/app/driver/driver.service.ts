@@ -110,13 +110,13 @@ export const newDriverService = (pool: Pool): DriverService => ({
 
     async read(licenseId) {
         const query = `
-            SELECT driver.license_id   AS "licenseId",
-                   name.first_name     AS "firstName",
-                   name.surname        AS "surname",
-                   name.second_name    AS "secondName",
-                   name.second_surname AS "secondSurname"
+            SELECT driver.license_id                AS "licenseId",
+                   COALESCE(name.first_name, 'N/A') AS "firstName",
+                   COALESCE(name.surname, 'N/A')    AS "surname",
+                   name.second_name                 AS "secondName",
+                   name.second_surname              AS "secondSurname"
             FROM driver
-                     INNER JOIN driver_name name ON driver.id = name.driver_id
+                     LEFT JOIN driver_name name ON driver.id = name.driver_id
             WHERE driver.license_id = $1;
         `;
 
