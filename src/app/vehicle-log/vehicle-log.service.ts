@@ -166,7 +166,7 @@ export const newVehicleLogService = (
                     `${ reasonStr } Vehicle mileage can only be greater than or equals to the last mileage recorded (i.e., increasing) or zero (i.e., reset).`,
                 );
             }
-            else if (reasonStr.includes(`Provided log type ${ logType } is invalid`)) {
+            else if (reasonStr.includes(`Provided log type "${ logType }" is invalid`)) {
                 reject = rejectIncorrectValueError;
                 info = incorrectEventInfo(
                     context,
