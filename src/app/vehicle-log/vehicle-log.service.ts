@@ -26,10 +26,22 @@ import {
     VehicleLogUpdateBody,
 } from "./vehicle-log";
 
+export type ReadAllQueryParams = {
+    vehicleNumber?: string;
+    driverLicenseId?: string;
+    date?: Date;
+}
+
 export type VehicleLogService = {
     create: (log: VehicleLogCreateBody) => Promise<VehicleLog>,
     read: (id: number) => Promise<VehicleLog | null>,
-    readAll: (limit: number, page: number) => Promise<VehicleLog[]>,
+
+    readAll: (
+        limit: number,
+        page: number,
+        params: ReadAllQueryParams,
+    ) => Promise<VehicleLog[]>,
+
     update: (log: VehicleLogUpdateBody) => Promise<VehicleLog | null>,
     delete: (id: number) => Promise<boolean>,
 }
@@ -313,21 +325,32 @@ export const newVehicleLogService = (
             .catch(handleError);
     },
 
-    async readAll(limit, page) {
+    async readAll(limit, page, { vehicleNumber, driverLicenseId, date }) {
         const offset = (page - 1) * limit;
         const query = `
-            SELECT log.id,
-                   vehicle.number      AS "vehicleNumber",
-                   driver.license_id   AS "driverFullName",
-                   log.event_type      AS "logType",
-                   log.event_timestamp AS "timestamp",
-                   log.mileage         AS "mileageInKilometers"
-            FROM vehicle_log log
-                     INNER JOIN vehicle ON log.vehicle_id = vehicle.id
-                     INNER JOIN driver ON log.driver_id = driver.id
-            ORDER BY log.event_timestamp DESC
-            LIMIT $1 OFFSET $2;
+            SELECT vl.id,
+                   v.number     AS vehicle_number,
+                   d.license_id AS driver_license_id,
+                   vl.event_type,
+                   vl.event_timestamp,
+                   vl.mileage
+            FROM vehicle_log vl
+                     JOIN vehicle v ON vl.vehicle_id = v.id
+                     JOIN driver d ON vl.driver_id = d.id
+            WHERE ($1::VARCHAR IS NULL OR v.number = $1)
+              AND ($2::VARCHAR IS NULL OR d.license_id = $2)
+              AND ($3::DATE IS NULL OR DATE(vl.event_timestamp) = $3)
+            ORDER BY vl.event_timestamp DESC
+            LIMIT $4 OFFSET $5;
         `;
+
+        const params = [
+            vehicleNumber || null,
+            driverLicenseId || null,
+            date ? date.toISOString().split("T")[0] : null, // Convert date to YYYY-MM-DD
+            limit,
+            offset
+        ];
 
         const handleError = (reason: unknown) =>
             withError(`Failed to retrieve vehicle logs for page ${ page } with limit ${ limit }.`)
@@ -335,7 +358,7 @@ export const newVehicleLogService = (
                 .catch(rejectInternalError);
 
         return pool
-            .query(query, [ limit, offset ])
+            .query(query, params)
             .then(res => res.rows)
             .catch(handleError);
     },

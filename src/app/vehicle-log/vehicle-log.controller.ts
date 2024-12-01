@@ -51,17 +51,35 @@ export const newVehicleLogController = (service: VehicleLogService): VehicleLogC
         const queryIntParam = (key: string, def: number) =>
             parseInt(req.query[key] as string) || def;
 
+        const queryStringParamOrUndefined = (key: string) =>
+            req.query[key] !== undefined
+            ? String(req.query[key])
+            : undefined;
+
+        const dateOrUndefined = (dateString: string) => {
+            const parse = Date.parse(dateString);
+            return !isNaN(parse) ? new Date(parse) : undefined;
+        };
+
+        const queryDateParamOrUndefined = (key: string) =>
+            req.query[key] !== undefined
+            ? dateOrUndefined(String(req.query[key]))
+            : undefined;
+
         const defLimit = 10;
         const defPage = 1;
         const limit = Math.max(queryIntParam("limit", defLimit), 0);
         const page = Math.max(queryIntParam("page", defPage), 1);
+        const vehicleNumber = queryStringParamOrUndefined("vehicle-number");
+        const driverLicenseId = queryStringParamOrUndefined("driver-license-id");
+        const date = queryDateParamOrUndefined("date");
 
         const respond = (logs: VehicleLog[]) => res
             .status(StatusCodes.OK)
             .json(logs);
 
         service
-            .readAll(limit, page)
+            .readAll(limit, page, { vehicleNumber, driverLicenseId, date })
             .then(respond, next);
     },
 

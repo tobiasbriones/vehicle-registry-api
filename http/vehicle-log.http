@@ -5,17 +5,25 @@ POST {{host}}/logs
 Content-Type: application/json
 
 {
-    "vehicleNumber": "VIN-015",
-    "driverLicenseId": "D678234",
-    "logType": "entry",
-    "mileageInKilometers": 1000
+    "vehicleNumber": "VIN-010",
+    "driverLicenseId": "D890123",
+    "logType": "exit",
+    "mileageInKilometers": 1300
 }
 
-### Fetch Vehicle
-GET {{host}}/logs/134
+### Fetch Vehicle Log
+GET {{host}}/logs/13
 
-### Fetch Vehicles
+### Fetch Vehicle Logs
 GET {{host}}/logs/?limit=22&page=1
+
+### Fetch Vehicles with Filter
+GET {{host}}/logs/?
+    limit=2&
+    page=1&
+    vehicle-number=VIN-010&
+    driver-license-id=D890123&
+    date=2024/12/01
 
 ### Update Vehicle
 PUT {{host}}/logs/1
