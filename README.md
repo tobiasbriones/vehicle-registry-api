@@ -92,21 +92,27 @@ documentation.
 
 ## Vehicle Registry API
 
-| Endpoint              | Method | Description                 |
-|-----------------------|--------|-----------------------------|
-| `/`                   | GET    | Welcome  server message.    |
-| **Vehicles**          |        |                             |
-| `/vehicles`           | POST   | Registers a new vehicle.    |
-| `/vehicles/:number`   | GET    | Fetches a vehicle.          |
-| `/vehicles`           | GET    | Fetches a list of vehicles. |
-| `/vehicles/:number`   | PUT    | Updates a vehicle.          |
-| `/vehicles/:number`   | DELETE | Deletes a vehicle.          |
-| **Drivers**           |        |                             |
-| `/drivers`            | POST   | Registers a new driver.     |
-| `/drivers/:licenseId` | GET    | Fetches a driver.           |
-| `/drivers`            | GET    | Fetches a list of drivers.  |
-| `/drivers/:licenseId` | PUT    | Updates a driver.           |
-| `/drivers/:licenseId` | DELETE | Deletes a diver.            |
+| Endpoint              | Method | Description                     |
+|-----------------------|--------|---------------------------------|
+| `/`                   | GET    | Welcome  server message.        |
+| **Vehicles**          |        |                                 |
+| `/vehicles`           | POST   | Registers a new vehicle.        |
+| `/vehicles/:number`   | GET    | Fetches a vehicle.              |
+| `/vehicles`           | GET    | Fetches a list of vehicles.     |
+| `/vehicles/:number`   | PUT    | Updates a vehicle.              |
+| `/vehicles/:number`   | DELETE | Deletes a vehicle.              |
+| **Drivers**           |        |                                 |
+| `/drivers`            | POST   | Registers a new driver.         |
+| `/drivers/:licenseId` | GET    | Fetches a driver.               |
+| `/drivers`            | GET    | Fetches a list of drivers.      |
+| `/drivers/:licenseId` | PUT    | Updates a driver.               |
+| `/drivers/:licenseId` | DELETE | Deletes a diver.                |
+| **Logs**              |        |                                 |
+| `/logs`               | POST   | Registers a new vehicle log.    |
+| `/logs/:id`           | GET    | Fetches a vehicle log.          |
+| `/logs`               | GET    | Fetches a list of vehicle logs. |
+| `/logs/:id`           | PUT    | Updates a vehicle log.          |
+| `/logs/:id`           | DELETE | Deletes a vehicle log.          |
 
 The complete API documentation is at
 the [vehicle-registry-api](docs/vehicle-registry-api.md) page.
