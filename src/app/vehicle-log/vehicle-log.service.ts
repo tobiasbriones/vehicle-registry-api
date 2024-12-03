@@ -93,19 +93,19 @@ export const newVehicleLogService = (
         ): Promise<MileageIsValidResult> => client
             .query(
                 `
-                    WITH last_mileage AS (SELECT mileage
-                                          FROM vehicle_log
-                                          WHERE vehicle_id = $1
-                                          ORDER BY event_timestamp DESC
-                                          LIMIT 1)
-                    SELECT CASE
-                               WHEN NOT EXISTS (SELECT 1 FROM last_mileage)
-                                   THEN TRUE -- No previous records, valid to start at any mileage
-                               WHEN $2 >= (SELECT mileage FROM last_mileage)
-                                   THEN TRUE -- New mileage is greater or equal to the last mileage
-                               ELSE FALSE -- New mileage is less than the last mileage
-                               END                            AS "isValid",
-                           (SELECT mileage FROM last_mileage) AS "lastMileage"
+                WITH last_mileage AS (SELECT mileage
+                                      FROM vehicle_log
+                                      WHERE vehicle_id = $1
+                                      ORDER BY event_timestamp DESC
+                                      LIMIT 1)
+                SELECT CASE
+                           WHEN NOT EXISTS (SELECT 1 FROM last_mileage)
+                               THEN TRUE -- No previous records, valid to start at any mileage
+                           WHEN $2 >= (SELECT mileage FROM last_mileage)
+                               THEN TRUE -- New mileage is greater or equal to the last mileage
+                           ELSE FALSE -- New mileage is less than the last mileage
+                           END                            AS "isValid",
+                       (SELECT mileage FROM last_mileage) AS "lastMileage"
 
                 `,
                 [ vehicleId, mileageInKilometers ],
@@ -126,24 +126,24 @@ export const newVehicleLogService = (
         ): Promise<EventIsValidResult> => client
             .query(
                 `
-                    WITH last_event AS (SELECT event_type
-                                        FROM vehicle_log
-                                        WHERE vehicle_id = $1
-                                        ORDER BY event_timestamp DESC
-                                        LIMIT 1)
-                    SELECT CASE
-                               WHEN NOT EXISTS (SELECT 1 FROM last_event)
-                                   THEN TRUE -- No previous records, valid to start with any event
-                               WHEN $2 = 'entry' AND
-                                    (SELECT event_type FROM last_event) = 'exit'
-                                   THEN TRUE -- Last event was 'exit', current can be 'entry'
-                               WHEN $2 = 'exit' AND
-                                    (SELECT event_type FROM last_event) =
-                                    'entry'
-                                   THEN TRUE -- Last event was 'entry', current can be 'exit'
-                               ELSE FALSE -- Invalid: Repeating the same event or invalid transition
-                               END                             AS "isValid",
-                           (SELECT event_type FROM last_event) AS "lastEvent";
+                WITH last_event AS (SELECT event_type
+                                    FROM vehicle_log
+                                    WHERE vehicle_id = $1
+                                    ORDER BY event_timestamp DESC
+                                    LIMIT 1)
+                SELECT CASE
+                           WHEN NOT EXISTS (SELECT 1 FROM last_event)
+                               THEN TRUE -- No previous records, valid to start with any event
+                           WHEN $2 = 'entry' AND
+                                (SELECT event_type FROM last_event) = 'exit'
+                               THEN TRUE -- Last event was 'exit', current can be 'entry'
+                           WHEN $2 = 'exit' AND
+                                (SELECT event_type FROM last_event) =
+                                'entry'
+                               THEN TRUE -- Last event was 'entry', current can be 'exit'
+                           ELSE FALSE -- Invalid: Repeating the same event or invalid transition
+                           END                             AS "isValid",
+                       (SELECT event_type FROM last_event) AS "lastEvent";
                 `,
                 [ vehicleId, logType ],
             )
