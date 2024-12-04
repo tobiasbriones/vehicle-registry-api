@@ -42,6 +42,11 @@ you [created the database](#creating-the-database).
 
 The above step will finish defining the `vehicle_registry` database.
 
+#### Populating Synthetic Data
+
+If you want to test the application, you can apply synthetic data available at
+[synthetic.sql](synthetic.sql).
+
 #### Migrations
 
 The project does not currently support migrations, so you are expected to set up
