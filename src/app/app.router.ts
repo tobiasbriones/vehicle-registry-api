@@ -9,6 +9,11 @@ import {
 } from "@app/driver/driver";
 import { DriverController } from "@app/driver/driver.controller";
 import {
+    vehicleLogRegistrationSchema,
+    vehicleLogUpdateSchema,
+} from "@app/vehicle-log/vehicle-log";
+import { VehicleLogController } from "@app/vehicle-log/vehicle-log.controller";
+import {
     vehicleRegistrationSchema,
     vehicleUpdateSchema,
 } from "@app/vehicle/vehicle";
@@ -20,6 +25,7 @@ export function newAppRouter(
     {
         vehicleController,
         driverController,
+        vehicleLogController,
     }: AppConfig,
 ) {
     const router = express.Router();
@@ -30,6 +36,7 @@ export function newAppRouter(
 
     routeVehicles(router, vehicleController);
     routeDrivers(router, driverController);
+    routeVehicleLogs(router, vehicleLogController);
     return router;
 }
 
@@ -74,4 +81,27 @@ function routeDrivers(
     );
 
     router.delete("/drivers/:licenseId", driverController.delete);
+}
+
+function routeVehicleLogs(
+    router: Router,
+    vehicleLogController: VehicleLogController,
+) {
+    router.post(
+        "/logs",
+        validateBody(vehicleLogRegistrationSchema),
+        vehicleLogController.create,
+    );
+
+    router.get("/logs/:id", vehicleLogController.read);
+
+    router.get("/logs", vehicleLogController.readAll);
+
+    router.put(
+        "/logs/:id",
+        validateBody(vehicleLogUpdateSchema),
+        vehicleLogController.update,
+    );
+
+    router.delete("/logs/:id", vehicleLogController.delete);
 }

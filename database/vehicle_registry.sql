@@ -34,3 +34,21 @@ CREATE TABLE driver_name
 
     FOREIGN KEY (driver_id) REFERENCES driver (id) ON DELETE CASCADE
 );
+
+-- Vehicle Log
+CREATE TYPE event_type AS ENUM ('entry', 'exit');
+
+CREATE TABLE vehicle_log
+(
+    id              INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    vehicle_id      INTEGER                  NOT NULL,
+    driver_id       INTEGER                  NOT NULL,
+    event_type      event_type               NOT NULL,
+    event_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    mileage         INTEGER                  NOT NULL CHECK (mileage >= 0),
+
+    FOREIGN KEY (vehicle_id) REFERENCES vehicle (id) ON DELETE CASCADE,
+    FOREIGN KEY (driver_id) REFERENCES driver (id) ON DELETE CASCADE,
+    UNIQUE (vehicle_id, event_timestamp),
+    UNIQUE (driver_id, event_timestamp)
+);
