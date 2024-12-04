@@ -17,6 +17,12 @@ export type Driver = {
     secondSurname?: string,
 }
 
+export const driverFullName = (
+    { firstName, secondName, surname, secondSurname }: Driver,
+) => [ firstName, secondName, surname, secondSurname ]
+    .filter(Boolean) // Remove undefined or falsy values
+    .join(" ");
+
 export const driverRegistrationSchema = z.object({
     licenseId: z
         .string()
