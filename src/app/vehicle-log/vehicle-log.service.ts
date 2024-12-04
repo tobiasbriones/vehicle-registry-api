@@ -100,10 +100,12 @@ export const newVehicleLogService = (
                                       LIMIT 1)
                 SELECT CASE
                            WHEN NOT EXISTS (SELECT 1 FROM last_mileage)
-                               THEN TRUE -- No previous records, valid to start at any mileage
+                               THEN TRUE  -- No previous records, valid to start at any mileage
+                           WHEN $2 = 0
+                                THEN TRUE -- Mileage resets are valid
                            WHEN $2 >= (SELECT mileage FROM last_mileage)
-                               THEN TRUE -- New mileage is greater or equal to the last mileage
-                           ELSE FALSE -- New mileage is less than the last mileage
+                               THEN TRUE  -- New mileage is greater or equal to the last mileage
+                           ELSE FALSE     -- New mileage is less than the last mileage
                            END                            AS "isValid",
                        (SELECT mileage FROM last_mileage) AS "lastMileage"
 
