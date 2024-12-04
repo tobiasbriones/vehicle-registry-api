@@ -247,7 +247,7 @@ export const newVehicleLogService = (
                 RETURNING id, event_timestamp AS timestamp
             `;
 
-            const queryResult = await pool.query(createLogQuery, [
+            const queryResult = await client.query(createLogQuery, [
                     vehicleId,
                     driverId,
                     logType,
