@@ -331,11 +331,11 @@ export const newVehicleLogService = (
         const offset = (page - 1) * limit;
         const query = `
             SELECT vl.id,
-                   v.number     AS vehicle_number,
-                   d.license_id AS driver_license_id,
-                   vl.event_type,
-                   vl.event_timestamp,
-                   vl.mileage
+                   v.number           AS "vehicleNumber",
+                   d.license_id       AS "driverLicenseId",
+                   vl.event_type      AS "eventType",
+                   vl.event_timestamp AS "timestamp",
+                   vl.mileage         AS "mileage"
             FROM vehicle_log vl
                      JOIN vehicle v ON vl.vehicle_id = v.id
                      JOIN driver d ON vl.driver_id = d.id

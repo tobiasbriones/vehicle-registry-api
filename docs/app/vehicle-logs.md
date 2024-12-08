@@ -45,7 +45,7 @@ Creates a new vehicle log.
       {
         "id": "integer",
         "vehicleNumber": "string",
-        "driverFullName": "string",
+        "driverLicenseId": "string",
         "logType": "string",
         "timestamp": "string",
         "mileageInKilometers": "integer"
@@ -56,7 +56,7 @@ Creates a new vehicle log.
       {
         "id": 1,
         "vehicleNumber": "ABC123",
-        "driverFullName": "John Doe",
+        "driverLicenseId": "D123456",
         "logType": "entry",
         "timestamp": "2024-12-01T10:00:00Z",
         "mileageInKilometers": 10000
@@ -152,7 +152,7 @@ Retrieves a specific vehicle log by ID.
       {
         "id": "integer",
         "vehicleNumber": "string",
-        "driverFullName": "string",
+        "driverLicenseId": "string",
         "logType": "string",
         "timestamp": "string",
         "mileageInKilometers": "integer"
@@ -163,7 +163,7 @@ Retrieves a specific vehicle log by ID.
       {
         "id": 1,
         "vehicleNumber": "ABC123",
-        "driverFullName": "John Doe",
+        "driverLicenseId": "D123456",
         "logType": "entry",
         "timestamp": "2024-12-01T10:00:00Z",
         "mileageInKilometers": 10000
