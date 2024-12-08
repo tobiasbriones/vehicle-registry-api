@@ -53,8 +53,16 @@ describe("VehicleLogController", () => {
 
                 const mockLog: VehicleLog = {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "Joe Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL456",
+                        firstName: "John",
+                        surname: "Doe",
+                    },
                     logType: "entry",
                     mileageInKilometers: 20,
                     timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
@@ -81,8 +89,16 @@ describe("VehicleLogController", () => {
         it("should return a vehicle log when found", async () => {
             const mockLog: VehicleLog = {
                 id: 1,
-                vehicleNumber: "VIN-123",
-                driverFullName: "Joe Doe",
+                vehicle: {
+                    number: "VIN-123",
+                    brand: "Hyundai",
+                    model: "Elantra",
+                },
+                driver: {
+                    licenseId: "DL456",
+                    firstName: "Joe",
+                    surname: "Doe",
+                },
                 logType: "entry",
                 mileageInKilometers: 20,
                 timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
@@ -123,8 +139,16 @@ describe("VehicleLogController", () => {
             const mockLogs: VehicleLog[] = [
                 {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "Joe Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL987",
+                        firstName: "Joe",
+                        surname: "Doe",
+                    },
                     logType: "entry",
                     mileageInKilometers: 0,
                     timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
@@ -151,8 +175,16 @@ describe("VehicleLogController", () => {
             async () => {
                 const mockLog: VehicleLog = {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "Joe Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL987",
+                        firstName: "Joe",
+                        surname: "Smith",
+                    },
                     logType: "entry",
                     mileageInKilometers: 110,
                     timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
