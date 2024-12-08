@@ -23,6 +23,22 @@ export const driverFullName = (
     .filter(Boolean) // Remove undefined or falsy values
     .join(" ");
 
+/**
+ * Defines the SQL JSON arguments of the Driver model passed to the
+ * `json_build_object` PSQL function when fetching a Driver record as a
+ * composed object.
+ *
+ * The underlying SQL where these args will be placed must use the `driver`
+ * and `name` variables to join the `driver` and `driver_name` tables.
+ */
+export const driverSqlJsonArgs: string = `
+    'licenseId', driver.license_id,
+    'firstName', COALESCE(name.first_name, 'N/A'),
+    'surname', COALESCE(name.surname, 'N/A'),
+    'secondName', name.second_name,
+    'secondSurname', name.second_surname
+`;
+
 export const driverRegistrationSchema = z.object({
     licenseId: z
         .string()

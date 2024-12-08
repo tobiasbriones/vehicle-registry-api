@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { AppError } from "@app/app.error";
+import { Driver } from "@app/driver/driver";
 import { DriverService } from "@app/driver/driver.service";
+import { VehicleService } from "@app/vehicle/vehicle.service";
 import { Pool, PoolClient } from "pg";
-import { AppError } from "src/app/app.error";
-import { Driver } from "src/app/driver/driver";
+import { Vehicle } from "@app/vehicle/vehicle";
 import {
     VehicleLog,
     VehicleLogCreateBody,
@@ -19,6 +21,7 @@ jest.mock("@app/driver/driver.service");
 describe("VehicleLogService", () => {
     let pool: jest.Mocked<Pool>;
     let client: jest.Mocked<PoolClient>;
+    let vehicleService: jest.Mocked<VehicleService>;
     let driverService: jest.Mocked<DriverService>;
     let service: VehicleLogService;
 
@@ -34,11 +37,15 @@ describe("VehicleLogService", () => {
             connect: jest.fn().mockResolvedValue(client),
         } as unknown as jest.Mocked<Pool>;
 
+        vehicleService = {
+            read: jest.fn(),
+        } as unknown as jest.Mocked<VehicleService>;
+
         driverService = {
             read: jest.fn(),
         } as unknown as jest.Mocked<DriverService>;
 
-        service = newVehicleLogService(pool, driverService);
+        service = newVehicleLogService(pool, vehicleService, driverService);
     });
 
     afterEach(() => {
@@ -52,6 +59,12 @@ describe("VehicleLogService", () => {
                 driverLicenseId: "DL456",
                 logType: "entry",
                 mileageInKilometers: 1000,
+            };
+
+            const mockVehicle: Vehicle = {
+                number: "VIN-123",
+                brand: "Hyundai",
+                model: "Elantra",
             };
 
             const mockDriver: Driver = {
@@ -105,6 +118,7 @@ describe("VehicleLogService", () => {
                     rowCount: 1,
                 }); // Insert log
 
+            vehicleService.read.mockResolvedValue(mockVehicle);
             driverService.read.mockResolvedValue(mockDriver);
 
             const result = await service.create(mockLog);
@@ -112,12 +126,12 @@ describe("VehicleLogService", () => {
             expect(client.query).toHaveBeenCalledTimes(7);
             expect(result).toEqual({
                 id: 1,
-                vehicleNumber: "VIN-123",
-                driverFullName: "John Doe",
+                vehicle: mockVehicle,
+                driver: mockDriver,
                 logType: "entry",
-                timestamp: "2024-11-27 00:18:00.755929 +00:00",
+                timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
                 mileageInKilometers: 1000,
-            });
+            } as VehicleLog);
         });
 
         it("should throw an error if vehicle does not exist", async () => {
@@ -162,10 +176,22 @@ describe("VehicleLogService", () => {
 
     describe("read", () => {
         it("should return a vehicle log by ID", async () => {
+            const mockVehicle: Vehicle = {
+                number: "VIN-123",
+                brand: "Hyundai",
+                model: "Elantra",
+            };
+
+            const mockDriver: Driver = {
+                licenseId: "DL456",
+                firstName: "John",
+                surname: "Doe",
+            };
+
             const mockLog: VehicleLog = {
                 id: 1,
-                vehicleNumber: "VIN-123",
-                driverFullName: "John Doe",
+                vehicle: mockVehicle,
+                driver: mockDriver,
                 logType: "entry",
                 timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
                 mileageInKilometers: 1000,
@@ -202,8 +228,16 @@ describe("VehicleLogService", () => {
             const mockLogs: VehicleLog[] = [
                 {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "John Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL456",
+                        firstName: "John",
+                        surname: "Doe",
+                    },
                     logType: "entry",
                     timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
                     mileageInKilometers: 1000,
@@ -224,16 +258,33 @@ describe("VehicleLogService", () => {
             const mockLogs: VehicleLog[] = [
                 {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "John Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL456",
+                        firstName: "John",
+                        surname: "Doe",
+                    },
                     logType: "entry",
                     timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
                     mileageInKilometers: 1000,
                 },
+
                 {
                     id: 2,
-                    vehicleNumber: "VIN-321",
-                    driverFullName: "Joe Smith",
+                    vehicle: {
+                        number: "VIN-321",
+                        brand: "Mazda",
+                        model: "CX-5",
+                    },
+                    driver: {
+                        licenseId: "DL987",
+                        firstName: "Joe",
+                        surname: "Smith",
+                    },
                     logType: "entry",
                     timestamp: new Date("2024-11-28 00:18:00.755929 +00:00"),
                     mileageInKilometers: 2000,
@@ -254,7 +305,7 @@ describe("VehicleLogService", () => {
             expect(pool.query).toHaveBeenCalledTimes(1);
             expect(pool.query).toHaveBeenCalledWith(
                 expect.stringContaining(
-                    "WHERE ($1::VARCHAR IS NULL OR v.number = $1)"),
+                    "WHERE ($1::VARCHAR IS NULL OR vehicle.number = $1)"),
                 [
                     "VIN-123", // Filter by vehicleNumber
                     null,      // driverLicenseId is null
@@ -263,15 +314,24 @@ describe("VehicleLogService", () => {
                     0,         // Offset (calculated from page - 1)
                 ],
             );
+
             expect(result).toEqual([
                 {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "John Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL456",
+                        firstName: "John",
+                        surname: "Doe",
+                    },
                     logType: "entry",
-                    timestamp: new Date("2024-11-27T00:18:00.755Z"),
+                    timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
                     mileageInKilometers: 1000,
-                },
+                } as VehicleLog,
             ]);
         });
 
@@ -279,16 +339,33 @@ describe("VehicleLogService", () => {
             const mockLogs: VehicleLog[] = [
                 {
                     id: 1,
-                    vehicleNumber: "VIN-123",
-                    driverFullName: "John Doe",
+                    vehicle: {
+                        number: "VIN-123",
+                        brand: "Hyundai",
+                        model: "Elantra",
+                    },
+                    driver: {
+                        licenseId: "DL456",
+                        firstName: "John",
+                        surname: "Doe",
+                    },
                     logType: "entry",
                     timestamp: new Date("2024-11-27 00:18:00.755929 +00:00"),
                     mileageInKilometers: 1000,
                 },
+
                 {
                     id: 2,
-                    vehicleNumber: "VIN-321",
-                    driverFullName: "Joe Smith",
+                    vehicle: {
+                        number: "VIN-321",
+                        brand: "Kia",
+                        model: "Soul",
+                    },
+                    driver: {
+                        licenseId: "DL987",
+                        firstName: "Joe",
+                        surname: "Smith",
+                    },
                     logType: "entry",
                     timestamp: new Date("2024-11-28 00:18:00.755929 +00:00"),
                     mileageInKilometers: 2000,
@@ -309,7 +386,7 @@ describe("VehicleLogService", () => {
             expect(pool.query).toHaveBeenCalledTimes(1);
             expect(pool.query).toHaveBeenCalledWith(
                 expect.stringContaining(
-                    "AND ($3::DATE IS NULL OR DATE(vl.event_timestamp) = $3)"),
+                    "AND ($3::DATE IS NULL OR DATE(log.event_timestamp) = $3)"),
                 [
                     null,         // Filter by vehicleNumber
                     null,         // driverLicenseId is null
@@ -321,12 +398,20 @@ describe("VehicleLogService", () => {
             expect(result).toEqual([
                 {
                     id: 2,
-                    vehicleNumber: "VIN-321",
-                    driverFullName: "Joe Smith",
+                    vehicle: {
+                        number: "VIN-321",
+                        brand: "Kia",
+                        model: "Soul",
+                    },
+                    driver: {
+                        licenseId: "DL987",
+                        firstName: "Joe",
+                        surname: "Smith",
+                    },
                     logType: "entry",
                     timestamp: new Date("2024-11-28 00:18:00.755929 +00:00"),
                     mileageInKilometers: 2000,
-                },
+                } as VehicleLog,
             ]);
         });
     });
@@ -345,8 +430,17 @@ describe("VehicleLogService", () => {
 
             const readSpy = jest.spyOn(service, "read").mockResolvedValueOnce({
                 ...mockUpdate,
-                vehicleNumber: "VIN-123",
-                driverFullName: "John Doe",
+                vehicle: {
+                    number: "VIN-123",
+                    brand: "Hyundai",
+                    model: "Elantra",
+                },
+
+                driver: {
+                    licenseId: "DL456",
+                    firstName: "John",
+                    surname: "Doe",
+                },
                 timestamp: new Date("2024-11-28 00:18:00.755929 +00:00"),
             });
 

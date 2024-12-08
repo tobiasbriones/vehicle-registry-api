@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/tobiasbriones/vehicle-registry-api
 
+import { Driver } from "@app/driver/driver";
+import { Vehicle } from "@app/vehicle/vehicle";
 import { z } from "zod";
 
 export type VehicleLogType = "entry" | "exit";
@@ -11,8 +13,8 @@ export type VehicleLogType = "entry" | "exit";
  */
 export type VehicleLog = {
     id: number,
-    vehicleNumber: string,
-    driverFullName: string,
+    vehicle: Vehicle,
+    driver: Driver,
     logType: VehicleLogType;
     timestamp: Date;
     mileageInKilometers: number;

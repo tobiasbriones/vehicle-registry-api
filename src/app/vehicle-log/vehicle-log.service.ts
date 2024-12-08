@@ -9,7 +9,7 @@ import {
     rejectInternalError,
     rejectReferenceNotFoundError,
 } from "@app/app.error";
-import { driverFullName } from "@app/driver/driver";
+import { driverSqlJsonArgs } from "@app/driver/driver";
 import { DriverService } from "@app/driver/driver.service";
 import {
     driverNotFoundInfo,
@@ -17,6 +17,8 @@ import {
     incorrectMileageInfo,
     vehicleNotFoundInfo,
 } from "@app/vehicle-log/vehicle-log.error";
+import { vehicleSqlJsonArgs } from "@app/vehicle/vehicle";
+import { VehicleService } from "@app/vehicle/vehicle.service";
 import { withError } from "@log/log";
 import { Pool, PoolClient, QueryResult } from "pg";
 import {
@@ -48,6 +50,7 @@ export type VehicleLogService = {
 
 export const newVehicleLogService = (
     pool: Pool,
+    vehicleService: VehicleService,
     driverService: DriverService,
 ): VehicleLogService => ({
     async create(log) {
@@ -93,22 +96,21 @@ export const newVehicleLogService = (
         ): Promise<MileageIsValidResult> => client
             .query(
                 `
-                WITH last_mileage AS (SELECT mileage
-                                      FROM vehicle_log
-                                      WHERE vehicle_id = $1
-                                      ORDER BY event_timestamp DESC
-                                      LIMIT 1)
-                SELECT CASE
-                           WHEN NOT EXISTS (SELECT 1 FROM last_mileage)
-                               THEN TRUE  -- No previous records, valid to start at any mileage
-                           WHEN $2 = 0
-                                THEN TRUE -- Mileage resets are valid
-                           WHEN $2 >= (SELECT mileage FROM last_mileage)
-                               THEN TRUE  -- New mileage is greater or equal to the last mileage
-                           ELSE FALSE     -- New mileage is less than the last mileage
-                           END                            AS "isValid",
-                       (SELECT mileage FROM last_mileage) AS "lastMileage"
-
+                    WITH last_mileage AS (SELECT mileage
+                                          FROM vehicle_log
+                                          WHERE vehicle_id = $1
+                                          ORDER BY event_timestamp DESC
+                                          LIMIT 1)
+                    SELECT CASE
+                               WHEN NOT EXISTS (SELECT 1 FROM last_mileage)
+                                   THEN TRUE -- No previous records, valid to start at any mileage
+                               WHEN $2 = 0
+                                   THEN TRUE -- Mileage resets are valid
+                               WHEN $2 >= (SELECT mileage FROM last_mileage)
+                                   THEN TRUE -- New mileage is greater or equal to the last mileage
+                               ELSE FALSE -- New mileage is less than the last mileage
+                               END                            AS "isValid",
+                           (SELECT mileage FROM last_mileage) AS "lastMileage"
                 `,
                 [ vehicleId, mileageInKilometers ],
             )
@@ -128,24 +130,24 @@ export const newVehicleLogService = (
         ): Promise<EventIsValidResult> => client
             .query(
                 `
-                WITH last_event AS (SELECT event_type
-                                    FROM vehicle_log
-                                    WHERE vehicle_id = $1
-                                    ORDER BY event_timestamp DESC
-                                    LIMIT 1)
-                SELECT CASE
-                           WHEN NOT EXISTS (SELECT 1 FROM last_event)
-                               THEN TRUE -- No previous records, valid to start with any event
-                           WHEN $2 = 'entry' AND
-                                (SELECT event_type FROM last_event) = 'exit'
-                               THEN TRUE -- Last event was 'exit', current can be 'entry'
-                           WHEN $2 = 'exit' AND
-                                (SELECT event_type FROM last_event) =
-                                'entry'
-                               THEN TRUE -- Last event was 'entry', current can be 'exit'
-                           ELSE FALSE -- Invalid: Repeating the same event or invalid transition
-                           END                             AS "isValid",
-                       (SELECT event_type FROM last_event) AS "lastEvent";
+                    WITH last_event AS (SELECT event_type
+                                        FROM vehicle_log
+                                        WHERE vehicle_id = $1
+                                        ORDER BY event_timestamp DESC
+                                        LIMIT 1)
+                    SELECT CASE
+                               WHEN NOT EXISTS (SELECT 1 FROM last_event)
+                                   THEN TRUE -- No previous records, valid to start with any event
+                               WHEN $2 = 'entry' AND
+                                    (SELECT event_type FROM last_event) = 'exit'
+                                   THEN TRUE -- Last event was 'exit', current can be 'entry'
+                               WHEN $2 = 'exit' AND
+                                    (SELECT event_type FROM last_event) =
+                                    'entry'
+                                   THEN TRUE -- Last event was 'entry', current can be 'exit'
+                               ELSE FALSE -- Invalid: Repeating the same event or invalid transition
+                               END                             AS "isValid",
+                           (SELECT event_type FROM last_event) AS "lastEvent";
                 `,
                 [ vehicleId, logType ],
             )
@@ -259,7 +261,16 @@ export const newVehicleLogService = (
 
             await client.query("COMMIT");
 
-            // Read driver full name to return the final record
+            // Read vehicle to return the final record
+            const vehicle = await vehicleService.read(vehicleNumber);
+
+            if (vehicle === null) {
+                throw new Error(
+                    "Fail to read vehicle after registering this vehicle log.",
+                );
+            }
+
+            // Read driver to return the final record
             const driver = await driverService.read(driverLicenseId);
 
             if (driver === null) {
@@ -282,11 +293,11 @@ export const newVehicleLogService = (
 
             return {
                 id: result.id,
-                vehicleNumber,
-                driverFullName: driverFullName(driver),
+                vehicle,
+                driver,
                 logType,
-                timestamp: result.timestamp,
-                mileageInKilometers: mileageInKilometers,
+                timestamp: new Date(result.timestamp),
+                mileageInKilometers,
             } as VehicleLog;
         }
         catch (error) {
@@ -301,14 +312,19 @@ export const newVehicleLogService = (
     async read(id) {
         const query = `
             SELECT log.id,
-                   vehicle.number      AS "vehicleNumber",
-                   driver.license_id   AS "driverFullName",
+                   json_build_object(${ vehicleSqlJsonArgs })
+                                       AS vehicle,
+
+                   json_build_object(${ driverSqlJsonArgs })
+                                       AS driver,
+
                    log.event_type      AS "logType",
                    log.event_timestamp AS "timestamp",
                    log.mileage         AS "mileageInKilometers"
             FROM vehicle_log log
                      INNER JOIN vehicle ON log.vehicle_id = vehicle.id
                      INNER JOIN driver ON log.driver_id = driver.id
+                     LEFT JOIN driver_name name ON driver.id = name.driver_id
             WHERE log.id = $1;
         `;
 
@@ -330,28 +346,35 @@ export const newVehicleLogService = (
     async readAll(limit, page, { vehicleNumber, driverLicenseId, date }) {
         const offset = (page - 1) * limit;
         const query = `
-            SELECT vl.id,
-                   v.number     AS vehicle_number,
-                   d.license_id AS driver_license_id,
-                   vl.event_type,
-                   vl.event_timestamp,
-                   vl.mileage
-            FROM vehicle_log vl
-                     JOIN vehicle v ON vl.vehicle_id = v.id
-                     JOIN driver d ON vl.driver_id = d.id
-            WHERE ($1::VARCHAR IS NULL OR v.number = $1)
-              AND ($2::VARCHAR IS NULL OR d.license_id = $2)
-              AND ($3::DATE IS NULL OR DATE(vl.event_timestamp) = $3)
-            ORDER BY vl.event_timestamp DESC
+            SELECT log.id,
+                   json_build_object(${ vehicleSqlJsonArgs })
+                                       AS vehicle,
+
+                   json_build_object(${ driverSqlJsonArgs })
+                                       AS driver,
+
+                   log.event_type      AS "logType",
+                   log.event_timestamp AS "timestamp",
+                   log.mileage         AS "mileageInKilometers"
+            FROM vehicle_log log
+                     INNER JOIN vehicle ON log.vehicle_id = vehicle.id
+                     INNER JOIN driver ON log.driver_id = driver.id
+                     LEFT JOIN driver_name name ON driver.id = name.driver_id
+
+            WHERE ($1::VARCHAR IS NULL OR vehicle.number = $1)
+              AND ($2::VARCHAR IS NULL OR driver.license_id = $2)
+              AND ($3::DATE IS NULL OR DATE(log.event_timestamp) = $3)
+            ORDER BY log.event_timestamp DESC
             LIMIT $4 OFFSET $5;
         `;
 
         const params = [
             vehicleNumber || null,
             driverLicenseId || null,
-            date ? date.toISOString().split("T")[0] : null, // Convert date to YYYY-MM-DD
+            date ? date.toISOString().split("T")[0] : null, // Convert date to
+                                                            // YYYY-MM-DD
             limit,
-            offset
+            offset,
         ];
 
         const handleError = (reason: unknown) =>

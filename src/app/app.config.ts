@@ -29,7 +29,11 @@ export function newAppConfig(): AppConfig {
     const { dbPool } = newAppDatabase();
     const vehicleService = newVehicleService(dbPool);
     const driverService = newDriverService(dbPool);
-    const vehicleLogService = newVehicleLogService(dbPool, driverService);
+    const vehicleLogService = newVehicleLogService(
+        dbPool,
+        vehicleService,
+        driverService,
+    );
 
     return {
         vehicleController: newVehicleController(vehicleService),
