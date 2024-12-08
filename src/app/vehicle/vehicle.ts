@@ -18,6 +18,20 @@ export type Vehicle = {
     model: string,
 }
 
+/**
+ * Defines the SQL JSON arguments of the Vehicle model passed to the
+ * `json_build_object` PSQL function when fetching a Vehicle record as a
+ * composed object.
+ *
+ * The underlying SQL where these args will be placed must use the `vehicle`
+ * variable to join the `vehicle` table.
+ */
+export const vehicleSqlJsonArgs: string = `
+    'number', vehicle.number,
+    'brand', vehicle.brand,
+    'model', vehicle.model
+`;
+
 export const vehicleRegistrationSchema = z.object({
     number: z.string().max(20).trim().min(1),
     brand: z.string().max(100).trim().min(1),
