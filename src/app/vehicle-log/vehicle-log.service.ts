@@ -111,7 +111,6 @@ export const newVehicleLogService = (
                                ELSE FALSE -- New mileage is less than the last mileage
                                END                            AS "isValid",
                            (SELECT mileage FROM last_mileage) AS "lastMileage"
-
                 `,
                 [ vehicleId, mileageInKilometers ],
             )
@@ -298,7 +297,7 @@ export const newVehicleLogService = (
                 driver,
                 logType,
                 timestamp: new Date(result.timestamp),
-                mileageInKilometers: mileageInKilometers,
+                mileageInKilometers,
             } as VehicleLog;
         }
         catch (error) {
