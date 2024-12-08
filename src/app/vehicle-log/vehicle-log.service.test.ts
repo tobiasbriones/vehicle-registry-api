@@ -305,7 +305,7 @@ describe("VehicleLogService", () => {
             expect(pool.query).toHaveBeenCalledTimes(1);
             expect(pool.query).toHaveBeenCalledWith(
                 expect.stringContaining(
-                    "WHERE ($1::VARCHAR IS NULL OR v.number = $1)"),
+                    "WHERE ($1::VARCHAR IS NULL OR vehicle.number = $1)"),
                 [
                     "VIN-123", // Filter by vehicleNumber
                     null,      // driverLicenseId is null
@@ -386,7 +386,7 @@ describe("VehicleLogService", () => {
             expect(pool.query).toHaveBeenCalledTimes(1);
             expect(pool.query).toHaveBeenCalledWith(
                 expect.stringContaining(
-                    "AND ($3::DATE IS NULL OR DATE(vl.event_timestamp) = $3)"),
+                    "AND ($3::DATE IS NULL OR DATE(log.event_timestamp) = $3)"),
                 [
                     null,         // Filter by vehicleNumber
                     null,         // driverLicenseId is null

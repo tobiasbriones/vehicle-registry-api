@@ -236,8 +236,18 @@ Retrieves all vehicle logs with optional filters.
       [
         {
           "id": "integer",
-          "vehicleNumber": "string",
-          "driverLicenseId": "string",
+          "vehicle": {
+            "number": "string",
+            "brand": "string",
+            "model": "string"  
+          },
+          "driver": {
+            "licenseId": "string",
+            "firstName": "string",
+            "surname": "string",
+            "secondName": "string | null",
+            "secondSurname": "string | null"
+          },
           "logType": "string",
           "timestamp": "string",
           "mileageInKilometers": "integer"
@@ -248,9 +258,19 @@ Retrieves all vehicle logs with optional filters.
       ```json
       [
         {
-          "id": 1,
-          "vehicleNumber": "ABC123",
-          "driverLicenseId": "DL123456",
+          "id": 48,
+          "vehicle": {
+            "number": "VIN-010",
+            "brand": "Hyundai",
+            "model": "Elantra"
+          },
+          "driver": {
+            "licenseId": "D890123",
+            "firstName": "Olivia",
+            "surname": "Green",
+            "secondName": null,
+            "secondSurname": "Harris"
+          },
           "logType": "entry",
           "timestamp": "2024-12-01T10:00:00Z",
           "mileageInKilometers": 10000
