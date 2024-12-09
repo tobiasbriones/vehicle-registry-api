@@ -48,16 +48,15 @@ VALUES
     (3, 'Robert', 'Johnson', 'Andrew', 'Williams'),
     (4, 'Emily', 'Davis', NULL, 'Brown'),
     (5, 'Michael', 'Clark', 'Thomas', NULL),
-    (1, 'Lucas', 'White', 'Jacob', 'Lee'),
+    (6, 'Lucas', 'White', 'Jacob', 'Lee'),
     (7, 'Olivia', 'Green', NULL, 'Harris'),
     (8, 'Isabella', 'Scott', 'Ava', 'Walker'),
     (9, 'Liam', 'Adams', 'James', 'Martinez'),
     (10, 'Sophia', 'Nelson', NULL, 'Carter'),
-    (5, 'James', 'King', 'Liam', 'Perez'),
-    (3, 'Amelia', 'Wright', 'Hannah', 'Roberts'),
+    (11, 'James', 'King', 'Liam', 'Perez'),
+    (12, 'Amelia', 'Wright', 'Hannah', 'Roberts'),
     (13, 'William', 'Lopez', NULL, 'Morris'),
-    (5, 'Avery', 'Hill', 'Benjamin', 'Collins'),
-    (15, 'Ethan', 'Baker', 'Elijah', 'Mitchell'),
+    (14, 'Avery', 'Hill', 'Benjamin', 'Collins'),
 
     -- Adding records with unusual names
-    (13, 'Isabel', 'de la Cruz', 'Victoria', 'Gomez')
+    (15, 'Isabel', 'de la Cruz', 'Victoria', 'Gomez')
