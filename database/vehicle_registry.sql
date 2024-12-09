@@ -26,7 +26,7 @@ CREATE TABLE driver
 -- Driver Name
 CREATE TABLE driver_name
 (
-    driver_id      INTEGER     NOT NULL,
+    driver_id      INTEGER     NOT NULL UNIQUE,
     first_name     VARCHAR(30) NOT NULL CHECK (TRIM(first_name) <> ''),
     surname        VARCHAR(30) NOT NULL CHECK (TRIM(surname) <> ''),
     second_name    VARCHAR(30) NULL CHECK (TRIM(second_name) <> ''),

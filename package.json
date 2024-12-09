@@ -1,6 +1,6 @@
 {
     "name": "vehicle-registry-api",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "description": "Backend API for a vehicle registration web app that allows entrance and leave.",
     "main": "index.js",
     "type": "module",
